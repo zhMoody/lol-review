@@ -1,0 +1,108 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-12);
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 1.5px;
+}
+
+.retry {
+  margin: var(--sp-3) 0 0;
+  font-family: var(--font-num);
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+  letter-spacing: 0.4px;
+}
+
+.retry b {
+  color: var(--text-mid);
+  font-weight: 400;
+}
+
+/* 不确定进度：匀速滑块，不假装知道进度 */
+.bar {
+  margin-top: var(--sp-6);
+  width: 420px;
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--surface-2);
+  overflow: hidden;
+  position: relative;
+}
+
+.bar i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 38%;
+  height: 100%;
+  border-radius: var(--r-full);
+  background: var(--aug-gold);
+  animation: slide 1.6s var(--e) infinite;
+}
+
+@keyframes slide {
+  0% {
+    left: -38%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.cap {
+  margin: var(--sp-6) 0 0;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text-ghost);
+  text-align: center;
+  letter-spacing: 0.6px;
+}
+
+.hist {
+  flex: none;
+  border-top: 1px solid var(--line-soft);
+  padding: var(--sp-5) var(--sp-12);
+  display: flex;
+  gap: var(--sp-10);
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
+.label {
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-ghost);
+}
+
+.value {
+  font-family: var(--font-num);
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar i {
+    animation: none;
+    width: 100%;
+  }
+}

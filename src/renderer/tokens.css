@@ -1,0 +1,136 @@
+/**
+ * 设计系统 Token —— 唯一来源。
+ *
+ * 规范（docs/10 §0.2）：
+ *   任何组件里出现 # 颜色字面量即不合规（eslint no-restricted-syntax 已拦截）。
+ *   颜色 / 字阶 / 时长 / 圆角 只准引用这里的 CSS 变量。
+ *
+ * 出处：docs/02-design-system.md
+ */
+
+:root {
+  /* ── 1.1 极黑与灰阶 ──────────────────────────────── */
+  --bg-deep: #060607;
+  --bg: #0a0a0b;
+  --surface: #131315;
+  --surface-2: #1a1a1d;
+
+  --line: #232326;
+  --line-soft: #1a1a1d;
+
+  --text-hi: #f2f2f3;
+  --text-mid: #9e9ea4;
+  --text-low: #6a6a70;
+  --text-ghost: #3e3e43;
+
+  /* ── 1.2 唯一的彩色（犯罪语义）─────────────────────── */
+  --danger: #d9534f;
+
+  /* 失败态（对比度 8.1:1，不用 --text-mid 那档） */
+  --state-loss: #c9d3e0;
+
+  /* ── 1.4 强化符文品质色（唯一豁免，仅用于图标描边）─── */
+  --aug-silver: #b9c0c8;
+  --aug-gold: #d9ae5f;
+  --aug-prism: #b08cff;
+
+  /* ── 2. 字体 ───────────────────────────────────── */
+  --font-sans:
+    -apple-system, 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-num: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, monospace;
+
+  --fs-nano: 9.5px;
+  --fs-micro: 10px;
+  --fs-cap: 11.5px;
+  --fs-body: 12.5px;
+  --fs-name: 14px;
+  --fs-num-sm: 17px;
+  --fs-num: 26px;
+  --fs-verdict: 21px;
+  --fs-result: 58px;
+
+  /* ── 3. 间距（4px 基准）─────────────────────────── */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* ── 3. 圆角 ───────────────────────────────────── */
+  --r-chip: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-full: 999px;
+
+  /* ── 4. 动效（全局仅 4 个）───────────────────────── */
+  --d-instant: 90ms;
+  --d-fast: 180ms;
+  --d-base: 280ms;
+  --d-data: 600ms;
+
+  --e: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 全局重置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-mid);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 数字一律等宽：对局中每秒刷新，等宽才不抖 */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
+}
+
+/* 通栏细线：结构靠它，不靠卡片 */
+.rule {
+  height: 1px;
+  background: var(--line-soft);
+  border: 0;
+  margin: 0;
+}
+
+/* 焦点可见性（无障碍）—— Radix 之外的手写元素也要有 */
+:focus-visible {
+  outline: 2px solid var(--text-hi);
+  outline-offset: 2px;
+  border-radius: var(--r-chip);
+}
+
+/* ── 减少动效偏好：全部降为瞬时 ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

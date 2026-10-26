@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · S2 队友情报</title>
+<style>
+:root{
+  --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
+  --line:#232326; --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
+  --danger:#D9534F;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid);-webkit-font-smoothing:antialiased}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
+
+/* 顶栏 */
+.topbar{height:52px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--text-hi)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
+.topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-low);letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-hi)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--text-hi);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* 头部 */
+.head{padding:32px 48px 20px;display:flex;align-items:flex-end;justify-content:space-between}
+.h1{font-size:34px;font-weight:500;color:var(--text-hi);letter-spacing:2px;line-height:1}
+.sub{margin-top:12px;font-size:11.5px;color:var(--text-low);letter-spacing:1.2px}
+.reroll{text-align:right;padding-bottom:4px}
+.reroll .v{font-family:var(--mono);font-size:26px;color:var(--text-hi);line-height:1}
+.reroll .l{margin-top:8px;font-size:9.5px;letter-spacing:1px;color:var(--text-low)}
+
+/* 开黑括号 */
+.brackets{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:0 48px}
+.bracket{grid-column:1 / 3;position:relative;height:24px;display:flex;align-items:center;justify-content:center}
+.bracket::before{content:"";position:absolute;left:0;right:0;top:11px;height:1px;background:var(--line)}
+.bracket::after{content:"";position:absolute;left:0;right:0;top:11px;height:7px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.bracket span{position:relative;z-index:1;background:var(--bg);padding:0 10px;font-size:9px;letter-spacing:1.6px;color:var(--text-low)}
+
+/* 队友卡 */
+.teamrow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:0 48px}
+.tcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 14px 18px}
+.tcard .top{display:flex;flex-direction:column;align-items:center}
+.ava{width:72px;height:72px;border-radius:9px;overflow:hidden;background:var(--surface-2);outline:1px solid #2A2A2E}
+.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.nm{margin-top:11px;font-size:13px;color:var(--text-hi);letter-spacing:.2px;text-align:center}
+.rk{margin-top:5px;font-size:10px;color:var(--text-low);letter-spacing:.6px}
+.sep{height:1px;background:var(--line-soft);margin:14px 0}
+.winrate{display:flex;align-items:baseline;justify-content:center;gap:6px}
+.winrate .v{font-family:var(--mono);font-size:23px;color:var(--text-hi);line-height:1}
+.winrate .l{font-size:9.5px;letter-spacing:1px;color:var(--text-low)}
+.kdaline{margin-top:8px;font-family:var(--mono);font-size:11px;color:var(--text-mid);text-align:center;letter-spacing:.3px}
+.spark{display:flex;gap:3px;justify-content:center;margin-top:11px;height:12px}
+.spark i{width:6px;height:12px;border-radius:1.5px;display:block}
+.spark i.w{background:#6A6A70}
+.spark i.l{background:transparent;border:1px solid #2A2A2E}
+.meta{margin-top:12px;font-size:10px;line-height:1.75;color:var(--text-low);text-align:center;letter-spacing:.3px}
+.meta b{font-family:var(--mono);font-weight:400;color:var(--text-mid)}
+.tagline{margin-top:12px;display:flex;justify-content:center}
+.tag{font-size:9.5px;letter-spacing:1.2px;color:var(--text-low);border:1px solid var(--line);border-radius:4px;padding:3px 8px}
+.tag.warn{color:var(--danger);border-color:rgba(217,83,79,.4)}
+.tag.hot{color:var(--text-hi);border-color:#2A2A2E}
+
+/* 预言 */
+.oracle{margin:22px 48px 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);padding:18px 0;display:flex;align-items:baseline;gap:18px}
+.oracle .k{font-size:10px;letter-spacing:2.5px;color:var(--text-low);flex:none}
+.oracle .x{font-size:12.5px;line-height:1.6;color:var(--text-mid)}
+.oracle .x b{font-family:var(--mono);font-weight:400;color:var(--text-hi)}
+.oracle .hit{margin-left:auto;flex:none;font-size:9.5px;letter-spacing:1.2px;color:var(--text-ghost);border:1px dashed var(--line);border-radius:4px;padding:4px 10px}
+
+.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 48px 22px;font-size:9.5px;color:var(--text-ghost)}
+.foot .btn{font-size:10.5px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:4px 11px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">第 15 局 · 海克斯大乱斗 · queue 2400</div>
+    <div class="status"><i></i>选人中</div>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="h1">队友情报</div>
+      <div class="sub">5 位队友 · 其中 2 人是开黑 · 敌方英雄进游戏才揭晓</div>
+    </div>
+    <div class="reroll">
+      <div class="v">2<span style="font-size:14px;color:var(--text-low)"> / 2</span></div>
+      <div class="l">剩余重随</div>
+    </div>
+  </div>
+
+  <div class="brackets">
+    <div class="bracket"><span>开黑 · 2 人</span></div>
+    <div></div><div></div><div></div>
+  </div>
+
+  <div class="teamrow">
+
+    <div class="tcard">
+      <div class="top">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Lux/square" alt=""></div>
+        <div class="nm">Konata</div>
+        <div class="rk">钻石 II · 熟练度 7</div>
+      </div>
+      <div class="sep"></div>
+      <div class="winrate"><span class="v">52</span><span class="l">% 近 20 局</span></div>
+      <div class="kdaline">7.2 / 6.1 / 9.4</div>
+      <div class="spark"><i class="w"></i><i class="l"></i><i class="w"></i><i class="w"></i><i class="l"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="w"></i></div>
+      <div class="meta">海克斯大乱斗 <b>47</b> 局<br>最近常用 Lux <b>3</b> · Ahri <b>2</b></div>
+      <div class="tagline"><span class="tag">助攻型</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="top">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Ezreal/square" alt=""></div>
+        <div class="nm">白月光</div>
+        <div class="rk">大师 · 熟练度 12</div>
+      </div>
+      <div class="sep"></div>
+      <div class="winrate"><span class="v">61</span><span class="l">% 近 20 局</span></div>
+      <div class="kdaline">9.1 / 5.4 / 11.2</div>
+      <div class="spark"><i class="w"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="w"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="w"></i></div>
+      <div class="meta">海克斯大乱斗 <b>132</b> 局<br>最近常用 Ezreal <b>5</b> · Jinx <b>3</b></div>
+      <div class="tagline"><span class="tag hot">近 20 局最稳</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="top">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Garen/square" alt=""></div>
+        <div class="nm">小林</div>
+        <div class="rk">铂金 I · 熟练度 3</div>
+      </div>
+      <div class="sep"></div>
+      <div class="winrate"><span class="v">45</span><span class="l">% 近 20 局</span></div>
+      <div class="kdaline">5.8 / 8.3 / 10.1</div>
+      <div class="spark"><i class="l"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="w"></i></div>
+      <div class="meta">海克斯大乱斗 <b>89</b> 局<br>最近常用 Garen <b>4</b> · Darius <b>2</b></div>
+      <div class="tagline"><span class="tag">正常发挥</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="top">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Teemo/square" alt=""></div>
+        <div class="nm">阿哲</div>
+        <div class="rk">钻石 IV · 熟练度 15</div>
+      </div>
+      <div class="sep"></div>
+      <div class="winrate"><span class="v">55</span><span class="l">% 近 20 局</span></div>
+      <div class="kdaline">8.4 / 6.8 / 8.9</div>
+      <div class="spark"><i class="w"></i><i class="w"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="l"></i><i class="w"></i></div>
+      <div class="meta">海克斯大乱斗 <b>210</b> 局<br>最近常用 Teemo <b>6</b> · Zed <b>3</b></div>
+      <div class="tagline"><span class="tag hot">老乱斗</span></div>
+    </div>
+
+    <div class="tcard">
+      <div class="top">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/MissFortune/square" alt=""></div>
+        <div class="nm">路人甲</div>
+        <div class="rk">黄金 II · 熟练度 1</div>
+      </div>
+      <div class="sep"></div>
+      <div class="winrate"><span class="v">41</span><span class="l">% 近 20 局</span></div>
+      <div class="kdaline">4.2 / 9.7 / 7.6</div>
+      <div class="spark"><i class="l"></i><i class="l"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="l"></i><i class="l"></i><i class="w"></i><i class="l"></i><i class="l"></i></div>
+      <div class="meta">海克斯大乱斗 <b>12</b> 局<br>最近常用 MissFortune <b>2</b></div>
+      <div class="tagline"><span class="tag warn">场均阵亡 9.7</span></div>
+    </div>
+
+  </div>
+
+  <div class="oracle">
+    <div class="k">开 场 预 言</div>
+    <div class="x">队友近 20 局平均胜率 <b>50.8%</b>，本局预计打到 <b>19</b> 分钟以上。<br>「路人甲」近 20 局场均阵亡 <b>9.7</b>，本局他大概率会死 <b>9</b> 次以上。</div>
+    <div class="hit">打完自动对答案</div>
+  </div>
+
+  <div class="foot">
+    <span>数据来源：本地客户端接口 · 队友战绩可查</span>
+    <span class="btn">收起</span>
+  </div>
+
+</div>
+</div>
+</body>
+</html>

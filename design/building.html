@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · S4 结算生成中</title>
+<style>
+:root{
+  --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
+  --line:#232326; --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
+  --gold:#D9AE5F;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid);-webkit-font-smoothing:antialiased}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;min-height:640px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A;display:flex;flex-direction:column}
+
+.topbar{height:52px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft);flex:none}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--gold)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
+.topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-low);letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--gold)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 48px}
+.card{width:420px;padding:34px 36px 30px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.card h2{font-size:17px;font-weight:500;color:var(--text-hi);letter-spacing:1.5px;text-align:center}
+.retry{margin-top:13px;font-family:var(--mono);font-size:11.5px;color:var(--text-low);text-align:center;letter-spacing:.4px}
+.retry b{color:var(--text-mid);font-weight:400}
+.bar{margin-top:26px;height:3px;border-radius:99px;background:var(--surface-2);overflow:hidden;position:relative}
+.bar i{position:absolute;top:0;left:0;width:38%;height:100%;border-radius:99px;background:var(--gold);animation:slide 1.6s var(--e) infinite}
+@keyframes slide{0%{left:-38%}100%{left:100%}}
+.cap{margin-top:22px;font-size:11px;line-height:1.7;color:var(--text-ghost);text-align:center;letter-spacing:.6px}
+
+.hist{flex:none;border-top:1px solid var(--line-soft);padding:18px 48px;display:flex;gap:44px}
+.hist .i{display:flex;align-items:baseline;gap:10px}
+.hist .l{font-size:9.5px;letter-spacing:1.2px;color:var(--text-ghost)}
+.hist .v{font-family:var(--mono);font-size:11.5px;color:var(--text-low)}
+.foot{flex:none;padding:0 48px 20px;font-size:9.5px;color:#2E2E33}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">28:41 · 海克斯大乱斗 · queue 2400</div>
+    <div class="status"><i></i>生成中</div>
+  </div>
+
+  <div class="center">
+    <div class="card">
+      <h2>正在获取官方结算</h2>
+      <div class="retry">第 <b>2</b> 次重试 · 预计 <b>8</b> 秒</div>
+      <div class="bar"><i></i></div>
+      <div class="cap">等官方把这一局的数据写完，就好了。<br>已经记录下全部战斗过程，不会丢。</div>
+    </div>
+  </div>
+
+  <div class="hist">
+    <div class="i"><span class="l">本局时长</span><span class="v">28:41</span></div>
+    <div class="i"><span class="l">已抓取事件</span><span class="v">179 条</span></div>
+    <div class="i"><span class="l">对局 ID</span><span class="v">9021</span></div>
+  </div>
+
+  <div class="foot">数据来源：本地客户端接口</div>
+
+</div>
+</div>
+</body>
+</html>

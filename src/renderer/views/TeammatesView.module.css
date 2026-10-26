@@ -1,0 +1,286 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  padding: var(--sp-8) var(--sp-12) var(--sp-5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.sub {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+  letter-spacing: 1.2px;
+}
+
+.reroll {
+  text-align: right;
+  padding-bottom: var(--sp-1);
+}
+
+.rv {
+  font-family: var(--font-num);
+  font-size: var(--fs-num);
+  color: var(--text-hi);
+  line-height: 1;
+}
+
+.rs {
+  font-size: var(--fs-name);
+  color: var(--text-low);
+}
+
+.rl {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-low);
+}
+
+/* 开黑跨卡括号：关系画在人与人之间 */
+.brackets {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-3);
+  padding: 0 var(--sp-12);
+}
+
+.bracket {
+  grid-column: 1 / 3;
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bracket::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11px;
+  height: 1px;
+  background: var(--line);
+}
+
+.bracket::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 11px;
+  height: 7px;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.bracket span {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+  padding: 0 var(--sp-3);
+  font-size: 9px;
+  letter-spacing: 1.6px;
+  color: var(--text-low);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-3);
+  padding: 0 var(--sp-12);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: var(--sp-4) var(--sp-4) var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ava {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  outline: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--text-low);
+}
+
+.nm {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-name);
+  color: var(--text-hi);
+  letter-spacing: 0.2px;
+  text-align: center;
+}
+
+.rk {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-micro);
+  color: var(--text-low);
+  letter-spacing: 0.6px;
+}
+
+.sep {
+  height: 1px;
+  background: var(--line-soft);
+  margin: var(--sp-4) 0;
+  width: 100%;
+}
+
+.wr {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--sp-2);
+}
+
+.wrv {
+  font-family: var(--font-num);
+  font-size: 23px;
+  color: var(--text-hi);
+  line-height: 1;
+}
+
+.wrl {
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-low);
+}
+
+.kd {
+  margin-top: var(--sp-2);
+  font-family: var(--font-num);
+  font-size: 11px;
+  color: var(--text-mid);
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.spark {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  margin-top: var(--sp-3);
+  height: 12px;
+}
+
+.sparkW,
+.sparkL {
+  width: 6px;
+  height: 12px;
+  border-radius: 1.5px;
+  display: block;
+}
+
+.sparkW {
+  background: var(--text-low);
+}
+
+.sparkL {
+  background: transparent;
+  border: 1px solid var(--line);
+}
+
+.meta {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-micro);
+  line-height: 1.75;
+  color: var(--text-low);
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.meta b {
+  font-family: var(--font-num);
+  font-weight: 400;
+  color: var(--text-mid);
+}
+
+.tagline {
+  margin-top: var(--sp-3);
+  display: flex;
+  justify-content: center;
+}
+
+.tag {
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-low);
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  padding: 3px var(--sp-2);
+}
+
+.tagWarn {
+  color: var(--danger);
+  border-color: rgba(217, 83, 79, 0.4);
+}
+
+.tagHot {
+  color: var(--text-hi);
+  border-color: var(--line);
+}
+
+.oracle {
+  margin: var(--sp-5) var(--sp-12) 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  padding: var(--sp-5) 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-5);
+}
+
+.ok {
+  font-size: var(--fs-micro);
+  letter-spacing: 2.5px;
+  color: var(--text-low);
+  flex: none;
+}
+
+.ox {
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--text-mid);
+}
+
+.ox b {
+  font-family: var(--font-num);
+  font-weight: 400;
+  color: var(--text-hi);
+}
+
+.ohit {
+  margin-left: auto;
+  flex: none;
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-ghost);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-chip);
+  padding: var(--sp-1) var(--sp-3);
+}

@@ -1,0 +1,309 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.head {
+  padding: var(--sp-6) var(--sp-12) var(--sp-5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.clock {
+  font-family: var(--font-num);
+  font-size: 48px;
+  color: var(--text-hi);
+  line-height: 0.9;
+  letter-spacing: -1px;
+}
+
+.sub {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+  letter-spacing: 1.2px;
+}
+
+.kpis {
+  display: flex;
+  gap: var(--sp-10);
+  padding-bottom: var(--sp-1);
+}
+
+.kpi {
+  text-align: right;
+}
+
+.kv {
+  font-family: var(--font-num);
+  font-size: var(--fs-num);
+  color: var(--text-hi);
+  line-height: 1;
+}
+
+.ks {
+  color: var(--text-low);
+  font-size: var(--fs-name);
+  margin: 0 3px;
+}
+
+.na {
+  color: var(--text-ghost);
+}
+
+.kl {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-low);
+}
+
+/* S3b 降级提示条 */
+.notice {
+  margin: 0 var(--sp-12) var(--sp-2);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 11px var(--sp-4);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+}
+
+.notice i {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--danger);
+  flex: none;
+}
+
+.notice span {
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  color: var(--text-low);
+}
+
+.board {
+  padding: 0 var(--sp-12);
+}
+
+.teamLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-micro);
+  letter-spacing: 2px;
+  color: var(--text-low);
+}
+
+.ln {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-2);
+  padding: var(--sp-3) 0 var(--sp-4);
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-1) 0;
+}
+
+.ava {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  outline: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--text-low);
+}
+
+.slotDead .ava img,
+.slotDead .ava {
+  filter: grayscale(1) brightness(0.5);
+  opacity: 0.6;
+  outline-color: var(--line-soft);
+}
+
+.slotNa .ava {
+  outline-style: dashed;
+  outline-color: var(--line-soft);
+}
+
+.lv {
+  position: absolute;
+  left: -3px;
+  bottom: -3px;
+  min-width: 19px;
+  height: 16px;
+  padding: 0 var(--sp-1);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  font-family: var(--font-num);
+  font-size: var(--fs-micro);
+  color: var(--text-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slotNa .lv {
+  display: none;
+}
+
+.cd {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-num);
+  font-size: 25px;
+  color: var(--text-hi);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
+}
+
+.cd span {
+  font-size: 11px;
+  color: var(--text-mid);
+  margin-left: 2px;
+}
+
+.nm {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-body);
+  color: var(--text-hi);
+  letter-spacing: 0.2px;
+}
+
+.slotDead .nm,
+.slotNa .nm {
+  color: var(--text-low);
+}
+
+.kd {
+  margin-top: var(--sp-1);
+  font-family: var(--font-num);
+  font-size: var(--fs-micro);
+  color: var(--text-mid);
+  letter-spacing: 0.4px;
+}
+
+.slotNa .kd {
+  color: var(--text-ghost);
+  font-family: var(--font-sans);
+  letter-spacing: 0.6px;
+}
+
+.slotDead .kd {
+  opacity: 0.5;
+}
+
+/* 符文槽：4 槽随 3/7/11/15 级解锁，空槽虚线 */
+.augs {
+  display: flex;
+  gap: var(--sp-1);
+  margin-top: var(--sp-2);
+  height: 18px;
+}
+
+.aug {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  display: block;
+  background: var(--surface-2);
+}
+
+.augEmpty {
+  background: transparent;
+  border-style: dashed;
+  border-color: var(--line);
+}
+
+.slotNa .augs {
+  opacity: 0.35;
+}
+
+/* 战场带 */
+.band {
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  align-items: center;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: var(--sp-4) 0;
+  margin: var(--sp-1) 0;
+}
+
+.bl,
+.br {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.br {
+  justify-content: flex-end;
+}
+
+.big {
+  font-family: var(--font-num);
+  font-size: var(--fs-verdict);
+  color: var(--text-hi);
+}
+
+.bk {
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-low);
+}
+
+.bc {
+  text-align: center;
+  font-size: var(--fs-name);
+  color: var(--text-hi);
+  letter-spacing: 0.5px;
+}
+
+.bc em {
+  font-style: normal;
+  color: var(--text-low);
+  font-size: 11px;
+  margin-left: var(--sp-3);
+  letter-spacing: 1px;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--sp-5) var(--sp-12);
+  margin-top: auto;
+  font-size: var(--fs-micro);
+  color: var(--text-ghost);
+}
+
+.btn {
+  font-size: 10.5px;
+  color: var(--text-mid);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--sp-1) var(--sp-3);
+}

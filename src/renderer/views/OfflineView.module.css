@@ -1,0 +1,102 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--sp-12) var(--sp-10);
+}
+
+/* 死状态不呼吸 */
+.ring {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring i {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-full);
+  background: var(--text-ghost);
+}
+
+.h1 {
+  margin: var(--sp-8) 0 0;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 2px;
+}
+
+.h2 {
+  margin: var(--sp-4) 0 0;
+  font-size: var(--fs-body);
+  color: var(--text-ghost);
+  letter-spacing: 1.2px;
+}
+
+.rescan {
+  margin-top: var(--sp-8);
+  font-size: var(--fs-body);
+  color: var(--text-mid);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-6);
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.6px;
+  transition: all var(--d-fast) var(--e);
+}
+
+.rescan:hover {
+  border-color: var(--text-low);
+  color: var(--text-hi);
+}
+
+.hist {
+  flex: none;
+  border-top: 1px solid var(--line-soft);
+  padding: var(--sp-5) var(--sp-12);
+  display: flex;
+  gap: var(--sp-10);
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
+.label {
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-ghost);
+}
+
+.value {
+  font-family: var(--font-num);
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+}
+
+.strong {
+  color: var(--text-mid);
+}
+
+.foot {
+  flex: none;
+  padding: 0 var(--sp-12) var(--sp-5);
+  font-size: var(--fs-micro);
+  color: var(--text-ghost);
+}

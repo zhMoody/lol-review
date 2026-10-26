@@ -1,0 +1,132 @@
+/* 无边框窗口：整块 App 自己画圆角，窗口透明 */
+.stage {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  padding: 0;
+  background: transparent;
+}
+
+.app {
+  width: 100%;
+  max-width: 1280px;
+  min-height: 720px;
+  background: var(--bg);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 120px -50px #000, 0 0 0 1px var(--line-soft);
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* ── 美颜开关（顶栏）────────────────────────────── */
+.beauty,
+.beautyOn {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  color: var(--text-low);
+  transition: color var(--d-fast) var(--e);
+}
+
+.beautyOn {
+  color: var(--aug-gold);
+}
+
+.sw {
+  width: 26px;
+  height: 14px;
+  border-radius: var(--r-full);
+  background: var(--line);
+  position: relative;
+  transition: background var(--d-fast) var(--e);
+  flex: none;
+}
+
+.sw i {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--r-full);
+  background: var(--text-low);
+  transition: all var(--d-fast) var(--e);
+}
+
+.beautyOn .sw {
+  background: rgba(217, 174, 95, 0.28);
+}
+
+.beautyOn .sw i {
+  left: 14px;
+  background: var(--aug-gold);
+}
+
+/* ── 调试栏（开发态）────────────────────────────── */
+.devbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-4);
+  border-top: 1px solid var(--line-soft);
+  background: var(--bg-deep);
+  overflow-x: auto;
+}
+
+.devlabel {
+  font-size: var(--fs-nano);
+  letter-spacing: 1px;
+  color: var(--text-ghost);
+  flex: none;
+  margin-right: var(--sp-2);
+}
+
+.devbtn {
+  flex: none;
+  font-size: var(--fs-nano);
+  color: var(--text-low);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  padding: 3px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--d-instant) var(--e);
+}
+
+.devbtn:hover {
+  color: var(--text-hi);
+  border-color: var(--text-low);
+}
+
+.devShow {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sp-5);
+  font-size: var(--fs-nano);
+  color: var(--text-ghost);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-family: inherit;
+}

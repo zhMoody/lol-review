@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · v2 中性极简 / 对阵阵容</title>
+<style>
+:root{
+  --bg:#0A0A0B;
+  --surface:#131315;
+  --line:#232326;
+  --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3;
+  --text-mid:#9E9EA4;
+  --text-low:#6A6A70;
+  --danger:#D9534F;
+  --silver:#B9C0C8;
+  --gold:#D9AE5F;
+  --prism:#B08CFF;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#060607;font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--text-mid)}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
+
+/* 顶栏 */
+.topbar{height:56px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--text-hi)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
+.topbar .mid{margin-left:auto;margin-right:auto;font-size:12px;color:var(--text-low);letter-spacing:.5px}
+.status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-low)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--text-hi);animation:b 2.4s ease-in-out infinite}
+@keyframes b{0%,100%{opacity:.25}50%{opacity:1}}
+
+/* 头部 */
+.head{padding:40px 48px 28px;display:flex;align-items:flex-end;justify-content:space-between}
+.result{font-size:58px;font-weight:700;letter-spacing:10px;line-height:.9;color:var(--text-hi)}
+.result.lose{color:#C8C8CC}
+.sub{margin-top:14px;font-size:12px;color:var(--text-low);letter-spacing:1.2px}
+.kpis{display:flex;gap:44px;padding-bottom:6px}
+.kpi{text-align:right}
+.kpi .v{font-family:var(--mono);font-size:26px;color:var(--text-hi);line-height:1}
+.kpi .v .s{color:var(--text-low);font-size:16px;margin:0 2px}
+.kpi .l{margin-top:8px;font-size:10px;color:var(--text-low);letter-spacing:1px}
+.kpi .v.neg{color:var(--danger)}
+
+/* 阵容 */
+.board{padding:0 48px}
+.teamlabel{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:2px;color:var(--text-low)}
+.teamlabel .ln{flex:1;height:1px;background:var(--line-soft)}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 0 18px}
+.slot{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px 0;position:relative}
+.slot .idx{font-family:var(--mono);font-size:9px;color:#3A3A3E;margin-bottom:7px;letter-spacing:1px}
+.ava{position:relative;width:88px;height:88px;border-radius:10px;overflow:hidden;background:#1A1A1D;outline:1px solid #2A2A2E;transition:outline-color .18s var(--e),transform .18s var(--e)}
+.ava img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92)}
+.slot:hover .ava{transform:translateY(-3px);outline-color:#55555C}
+.slot.crime .ava{outline:1.5px solid var(--danger)}
+.slot.sel .nm{color:#FFF}
+.slot.sel::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:18px;height:2px;background:var(--text-hi)}
+.pill{position:absolute;right:-4px;bottom:-4px;min-width:24px;height:17px;padding:0 5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;font-family:var(--mono);font-size:10px;color:var(--text-hi);display:flex;align-items:center;justify-content:center;line-height:1}
+.nm{margin-top:11px;font-size:12.5px;color:var(--text-hi);letter-spacing:.2px}
+.kd{margin-top:5px;font-family:var(--mono);font-size:10.5px;color:var(--text-mid);letter-spacing:.4px}
+.kd .d{color:var(--text-mid)}
+.kd .d.hot{color:var(--danger)}
+
+/* 时间轴 */
+.axis{position:relative;height:78px;margin:6px 0}
+.axis .line{position:absolute;left:0;right:0;top:26px;height:1px;background:var(--line)}
+.tick{position:absolute;top:26px;width:1px;height:7px;background:#3A3A3E}
+.tick.neg{background:var(--danger);height:11px;top:24px}
+.ev{position:absolute;top:38px;font-size:9.5px;color:var(--text-low);letter-spacing:.3px;transform:translateX(-50%);white-space:nowrap}
+.ev.neg{color:var(--danger);opacity:.85}
+.axis .center{position:absolute;left:50%;top:26px;transform:translate(-50%,-50%);background:var(--bg);padding:0 10px;font-family:var(--mono);font-size:10px;color:var(--text-low)}
+
+/* 结论 */
+.verdict{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);margin-top:8px}
+.vd{padding:26px 32px;border-right:1px solid var(--line-soft)}
+.vd:last-child{border-right:0}
+.vd:first-child{padding-left:48px}
+.vd .k{font-size:10px;letter-spacing:2px;color:var(--text-low)}
+.vd .n{margin-top:10px;font-size:21px;font-weight:500;color:var(--text-hi);letter-spacing:.4px}
+.vd .r{margin-top:8px;font-size:12px;line-height:1.55;color:var(--text-mid)}
+.vd.bad .n{color:var(--danger)}
+
+/* 罪状 */
+.indict{display:grid;grid-template-columns:1fr 268px;gap:40px;padding:24px 48px 4px;border-bottom:1px solid var(--line-soft)}
+.indict .hd{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.indict .hd h3{font-size:11px;letter-spacing:2.5px;color:var(--text-low);font-weight:500}
+.indict .hd .who{margin-left:auto;font-size:11px;color:var(--danger);letter-spacing:.4px}
+.charge{display:flex;gap:14px;align-items:baseline;padding:7px 0;border-top:1px solid #17171A}
+.charge:first-of-type{border-top:0}
+.charge .t{font-family:var(--mono);font-size:10.5px;color:var(--text-ghost);width:40px;flex:none}
+.charge .p{font-size:11px;color:var(--text-low);width:72px;flex:none;letter-spacing:.4px}
+.charge .x{font-size:12px;color:var(--text-mid);line-height:1.5}
+.charge .x b{font-family:var(--mono);font-weight:400;color:var(--danger)}
+.dmap{align-self:center}
+.dmap .cap{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1.2px;color:var(--text-ghost);margin-top:2px}
+
+/* 美颜开关 */
+.beauty{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.6px;color:var(--text-low);cursor:pointer;user-select:none}
+.sw{width:26px;height:14px;border-radius:99px;background:#232326;position:relative;transition:background .18s var(--e)}
+.sw i{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#6A6A70;transition:all .18s var(--e)}
+.beauty.on .sw{background:rgba(217,174,95,.28)}
+.beauty.on .sw i{left:14px;background:var(--gold-400,#D9AE5F)}
+.beauty.on{color:#D9AE5F}
+
+/* 详情 */
+.insp{display:grid;grid-template-columns:232px 1fr 200px;gap:36px;padding:26px 48px 30px;align-items:center}
+.who{display:flex;align-items:center;gap:14px}
+.who .ava{width:56px;height:56px;border-radius:8px;outline:1px solid var(--line)}
+.who .t{font-size:14px;color:var(--text-hi);font-weight:500}
+.who .s{margin-top:5px;font-size:10px;letter-spacing:1.2px;color:var(--text-low)}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.st{text-align:left}
+.st .v{font-family:var(--mono);font-size:17px;color:var(--text-hi)}
+.st .l{margin-top:7px;font-size:9.5px;letter-spacing:.8px;color:var(--text-low)}
+.st .bar{margin-top:8px;height:2px;background:#26262A}
+.st .bar i{display:block;height:100%;background:#6E6E74;width:var(--w);transition:width .6s var(--e)}
+.st.hot .bar i{background:var(--danger)}
+.augs{display:flex;gap:6px;justify-content:flex-end}
+.aug{width:26px;height:26px;border:1px solid;border-radius:5px;display:block;background:#1A1A1D;object-fit:cover}
+.aug.s{border-color:rgba(185,192,200,.45)}
+.aug.g{border-color:rgba(217,174,95,.6)}
+.aug.p{border-color:rgba(176,140,255,.7)}
+.aug.empty{background:transparent;border-style:dashed;border-color:#2A2A2E}
+.augnames{margin-top:9px;font-size:9.5px;line-height:1.55;color:var(--text-low);text-align:right;letter-spacing:.2px}
+.auglabel{font-size:9.5px;letter-spacing:1px;color:var(--text-low);text-align:right;margin-bottom:9px}
+
+.topbar .beauty{margin-right:20px}
+.foot{display:flex;justify-content:space-between;align-items:center;padding:0 48px 22px;font-size:10px;color:#3E3E43}
+.foot .btn{font-size:11px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:5px 12px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">第 14 局 · 已记录</div>
+    <div class="beauty" id="beauty"><span class="sw"><i></i></span>美颜</div>
+    <div class="status"><i></i>空闲</div>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="result lose">失败</div>
+      <div class="sub">28 : 41 · 海克斯大乱斗 · 16.21</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">42<span class="s">/</span>28<span class="s">/</span>61</div><div class="l">全队 K / D / A</div></div>
+      <div class="kpi"><div class="v neg">−4.2<span class="s">k</span></div><div class="l">金币差</div></div>
+      <div class="kpi"><div class="v">2<span class="s">:</span>3</div><div class="l">防御塔</div></div>
+    </div>
+  </div>
+
+  <div class="board">
+
+    <div class="teamlabel"><span>敌方 · 蓝方</span><span class="ln"></span></div>
+    <div class="slots" id="enemy">
+      <div class="slot" data-i="5"><div class="idx">01</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Zed/square" alt=""><span class="pill">76</span></div>
+        <div class="nm">Zed</div><div class="kd">14 <span class="d">/</span> 3 <span class="d">/</span> 9</div></div>
+      <div class="slot" data-i="6"><div class="idx">02</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Vi/square" alt=""><span class="pill">69</span></div>
+        <div class="nm">Vi</div><div class="kd">9 <span class="d">/</span> 4 <span class="d">/</span> 15</div></div>
+      <div class="slot" data-i="7"><div class="idx">03</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/KaiSa/square" alt=""><span class="pill">65</span></div>
+        <div class="nm">Kai'Sa</div><div class="kd">13 <span class="d">/</span> 5 <span class="d">/</span> 6</div></div>
+      <div class="slot" data-i="8"><div class="idx">04</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Darius/square" alt=""><span class="pill">61</span></div>
+        <div class="nm">Darius</div><div class="kd">10 <span class="d">/</span> 5 <span class="d">/</span> 8</div></div>
+      <div class="slot" data-i="9"><div class="idx">05</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Nautilus/square" alt=""><span class="pill">54</span></div>
+        <div class="nm">Nautilus</div><div class="kd">2 <span class="d">/</span> 8 <span class="d">/</span> 21</div></div>
+    </div>
+
+    <div class="axis">
+      <div class="line"></div>
+      <div class="tick" style="left:4.2%"></div><div class="ev" style="left:4.2%">首塔</div>
+      <div class="tick neg" style="left:15.4%"></div><div class="ev neg" style="left:15.4%">经济反超</div>
+      <div class="tick neg" style="left:39.2%"></div><div class="ev neg" style="left:39.2%">Yasuo 阵亡 → 丢塔</div>
+      <div class="tick neg" style="left:64.1%"></div><div class="ev neg" style="left:64.1%">二塔丢失</div>
+      <div class="tick neg" style="left:88.5%"></div><div class="ev neg" style="left:88.5%">团灭</div>
+      <div class="center">28:41</div>
+    </div>
+
+    <div class="slots" id="ally">
+      <div class="slot" data-i="0"><div class="idx">01</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Ahri/square" alt=""><span class="pill">73</span></div>
+        <div class="nm">Ahri</div><div class="kd">12 <span class="d">/</span> 4 <span class="d">/</span> 7</div></div>
+      <div class="slot" data-i="1"><div class="idx">02</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/LeeSin/square" alt=""><span class="pill">59</span></div>
+        <div class="nm">Lee Sin</div><div class="kd">5 <span class="d">/</span> <span class="d hot">9</span> <span class="d">/</span> 13</div></div>
+      <div class="slot" data-i="2"><div class="idx">03</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Jinx/square" alt=""><span class="pill">52</span></div>
+        <div class="nm">Jinx</div><div class="kd">6 <span class="d">/</span> 7 <span class="d">/</span> 5</div></div>
+      <div class="slot" data-i="3"><div class="idx">04</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Lulu/square" alt=""><span class="pill">34</span></div>
+        <div class="nm">Lulu</div><div class="kd">1 <span class="d">/</span> 6 <span class="d">/</span> 16</div></div>
+      <div class="slot crime sel" data-i="4"><div class="idx">05</div>
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""><span class="pill">28</span></div>
+        <div class="nm">Yasuo</div><div class="kd">2 <span class="d">/</span> <span class="d hot">11</span> <span class="d">/</span> 4</div></div>
+    </div>
+    <div class="teamlabel"><span class="ln"></span><span>我方 · 红方</span></div>
+
+  </div>
+
+  <div class="verdict">
+    <div class="vd">
+      <div class="k">最 　C</div>
+      <div class="n">Ahri</div>
+      <div class="r">伤害占比 34%，全场第一<br>4 次阵亡，全场最少</div>
+    </div>
+    <div class="vd bad">
+      <div class="k">在 犯 罪</div>
+      <div class="n">Yasuo</div>
+      <div class="r">11 次阵亡，其中 4 次发生在<br>团战开打前的 8 秒内</div>
+    </div>
+    <div class="vd">
+      <div class="k">在 划 水</div>
+      <div class="n">Lulu</div>
+      <div class="r">伤害占比 8%，全场最低<br>但治疗量 21.4k，全队第一</div>
+    </div>
+  </div>
+
+  <div class="indict">
+    <div>
+      <div class="hd"><h3>罪 状</h3><span class="who">Yasuo · 共 4 条可查证</span></div>
+      <div class="charge">
+        <span class="t">14:22</span><span class="p">中路</span>
+        <span class="x">团战开打前 <b>8 秒</b>阵亡 → 45 秒后丢二塔</span>
+      </div>
+      <div class="charge">
+        <span class="t">22:15</span><span class="p">敌方塔下</span>
+        <span class="x">吸收伤害仅为全队均值的 <b>31%</b>，秒躺</span>
+      </div>
+      <div class="charge">
+        <span class="t">24:40</span><span class="p">中路</span>
+        <span class="x">死时携带 <b>2,340</b> 金币未花，浪费唯一购物窗口</span>
+      </div>
+      <div class="charge">
+        <span class="t">26:02</span><span class="p">我方高地</span>
+        <span class="x">我方 4 人存活时无意义阵亡，直接掉高地</span>
+      </div>
+    </div>
+    <div class="dmap">
+      <svg viewBox="0 0 268 58" width="268" height="58" role="img" xmlns="http://www.w3.org/2000/svg">
+        <title>阵亡位置分布</title>
+        <desc>沿嚎哭深渊单线展开的阵亡位置，红色实心为白给阵亡。</desc>
+        <line x1="8" y1="26" x2="260" y2="26" stroke="#232326" stroke-width="1"/>
+        <line x1="8" y1="18" x2="8" y2="34" stroke="#2A2A2E" stroke-width="1"/>
+        <line x1="260" y1="18" x2="260" y2="34" stroke="#2A2A2E" stroke-width="1"/>
+        <circle cx="46" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
+        <circle cx="88" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
+        <circle cx="122" cy="26" r="3.6" fill="#D9534F"/>
+        <circle cx="150" cy="26" r="3.6" fill="#D9534F"/>
+        <circle cx="178" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
+        <circle cx="212" cy="26" r="3.6" fill="#D9534F"/>
+        <circle cx="236" cy="26" r="3.6" fill="#D9534F"/>
+        <text x="8" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" letter-spacing="1">我方</text>
+        <text x="134" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" text-anchor="middle" letter-spacing="1">中路</text>
+        <text x="260" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" text-anchor="end" letter-spacing="1">敌方</text>
+      </svg>
+      <div class="cap"><span>● 白给</span><span>○ 正常</span></div>
+    </div>
+  </div>
+
+  <div class="insp">
+    <div class="who">
+      <div class="ava"><img id="i-ava" src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""></div>
+      <div>
+        <div class="t" id="i-name">Yasuo</div>
+        <div class="s" id="i-tag">阵亡 11 · 评分 28</div>
+      </div>
+    </div>
+    <div class="stats" id="i-stats">
+      <div class="st"><div class="v" data-k="dmg">11%</div><div class="l">伤害占比</div><div class="bar"><i style="--w:11%"></i></div></div>
+      <div class="st"><div class="v" data-k="taken">31.5k</div><div class="l">承受伤害</div><div class="bar"><i style="--w:88%"></i></div></div>
+      <div class="st"><div class="v" data-k="heal">0.9k</div><div class="l">治疗量</div><div class="bar"><i style="--w:8%"></i></div></div>
+      <div class="st"><div class="v" data-k="cc">12s</div><div class="l">控制时长</div><div class="bar"><i style="--w:18%"></i></div></div>
+      <div class="st"><div class="v" data-k="gold">12.4k</div><div class="l">金币</div><div class="bar"><i style="--w:62%"></i></div></div>
+      <div class="st hot"><div class="v" data-k="death">11</div><div class="l">阵亡</div><div class="bar"><i style="--w:100%"></i></div></div>
+    </div>
+    <div>
+      <div class="auglabel">强化符文</div>
+      <div class="augs" id="i-augs">
+        <img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png" alt="">
+        <img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt="">
+        <img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png" alt="">
+        <img class="aug p" src="https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png" alt="">
+      </div>
+      <div class="augnames" id="i-augnames">尖端发明家 · 大力 · 灵巧 · 泰坦的坚决</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>数据来源：本地客户端接口 · 16:22 生成</span>
+    <span class="btn">导出</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+const AUG = {
+ 1001:['泰坦的坚决','p','https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png'],
+ 1004:['回归基本功','p','https://game.gtimg.cn/images/lol/act/img/rune/backtobasics_small.png'],
+ 1006:['利刃华尔兹','p','https://game.gtimg.cn/images/lol/act/img/rune/bladewaltz_small.png'],
+ 1002:['尖端发明家','g','https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png'],
+ 1005:['喂呜喂呜','g','https://game.gtimg.cn/images/lol/act/img/rune/weewooweewoo_small.png'],
+ 1013:['星界躯体','g','https://game.gtimg.cn/images/lol/act/img/rune/celestialbody_small.png'],
+ 1007:['大力','s','https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png'],
+ 1022:['灵巧','s','https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png'],
+ 1025:['俯冲轰炸','s','https://game.gtimg.cn/images/lol/act/img/rune/divebomber_small.png']
+};
+const P = [
+ {n:'Ahri',   d:['34%','18.2k','2.1k','28s','15.1k','4'],  w:[34,52,20,42,76,36], t:'阵亡 4 · 评分 73', a:[1001,1002,1007,1022]},
+ {n:'Lee Sin',d:['14%','24.3k','3.4k','33s','12.8k','9'],  w:[14,70,32,50,64,82], t:'阵亡 9 · 评分 59', a:[1002,1007,1022,1025]},
+ {n:'Jinx',   d:['19%','14.8k','0.4k','6s','13.9k','7'],   w:[19,42,4,9,69,64],  t:'阵亡 7 · 评分 52', a:[1006,1005,1007,1022]},
+ {n:'Lulu',   d:['8%','16.1k','21.4k','44s','10.2k','6'],  w:[8,46,100,67,51,55], t:'阵亡 6 · 评分 34', a:[1013,1005,1022,1025]},
+ {n:'Yasuo',  d:['11%','31.5k','0.9k','12s','12.4k','11'], w:[11,88,8,18,62,100], t:'阵亡 11 · 评分 28', a:[1002,1007,1022,1001]},
+ {n:'Zed',    d:['29%','15.6k','0.6k','9s','16.2k','3'],   w:[29,44,6,14,81,27], t:'阵亡 3 · 评分 76', a:[1001,1006,1004,1002]},
+ {n:'Vi',     d:['17%','27.8k','1.2k','51s','14.5k','4'],  w:[17,79,11,78,72,36],t:'阵亡 4 · 评分 69', a:[1013,1002,1007,1025]},
+ {n:"Kai'Sa", d:['26%','13.9k','0.5k','7s','15.8k','5'],   w:[26,39,5,11,79,45], t:'阵亡 5 · 评分 65', a:[1006,1005,1002,1022]},
+ {n:'Darius', d:['21%','29.1k','4.8k','22s','14.2k','5'],  w:[21,83,45,34,71,45],t:'阵亡 5 · 评分 61', a:[1001,1013,1007,1025]},
+ {n:'Nautilus',d:['9%','33.6k','2.2k','68s','11.9k','8'],  w:[9,95,21,100,60,73],t:'阵亡 8 · 评分 54', a:[1013,1007,1022,1025]}
+];
+const keys=['dmg','taken','heal','cc','gold','death'];
+const cdn=n=>'https://cdn.communitydragon.org/latest/champion/'+n.replace(/[^A-Za-z']/g,'')+'/square';
+function renderAugs(p){
+  document.getElementById('i-augs').innerHTML=p.a.map(id=>{
+    const a=AUG[id]; return a?`<img class="aug ${a[1]}" src="${a[2]}" alt="${a[0]}" title="${a[0]}">`:'';
+  }).join('');
+  document.getElementById('i-augnames').textContent=p.a.map(id=>(AUG[id]||['?'])[0]).join(' · ');
+}
+const slots=[...document.querySelectorAll('.slot')];
+slots.forEach(s=>s.addEventListener('click',()=>{
+  slots.forEach(x=>x.classList.remove('sel'));
+  s.classList.add('sel');
+  const p=P[+s.dataset.i];
+  document.getElementById('i-ava').src=cdn(p.n);
+  document.getElementById('i-name').textContent=p.n;
+  document.getElementById('i-tag').textContent=p.t;
+  document.querySelectorAll('#i-stats .st').forEach((st,i)=>{
+    st.querySelector('.v').textContent=p.d[i];
+    st.querySelector('.bar i').style.setProperty('--w',p.w[i]+'%');
+  });
+  renderAugs(p);
+}));
+renderAugs(P[4]);
+
+/* 美颜模式：把难看的数字换个说法，纯整蛊 */
+const kdNodes=[...document.querySelectorAll('.kd')];
+const kdRaw=kdNodes.map(el=>{
+  const n=el.textContent.match(/\d+/g).map(Number);
+  return {k:n[0],d:n[1],a:n[2]};
+});
+const beauty=document.getElementById('beauty');
+beauty.addEventListener('click',()=>{
+  const on=beauty.classList.toggle('on');
+  kdNodes.forEach((el,i)=>{
+    const {k,d,a}=kdRaw[i];
+    el.innerHTML=on
+      ? `参团 ${k+a} · 钢铁意志 ×${d}`
+      : `${k} <span class="d">/</span> ${d} <span class="d">/</span> ${a}`;
+  });
+  const kLabel=document.querySelector('.vd.bad .k');
+  if(kLabel) kLabel.textContent=on?'灵 魂 人 物':'在 犯 罪';
+  const tag=document.getElementById('i-tag');
+  if(tag) tag.textContent=on?'钢铁意志 ×11 · 评分 28':'阵亡 11 · 评分 28';
+  document.querySelector('.indict .hd h3').textContent=on?'功 劳 簿':'罪 状';
+  document.querySelector('.indict .hd .who').textContent=on?'Yasuo · 共 4 次挺身而出':'Yasuo · 共 4 条可查证';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · S3 对局中 · 设计稿</title>
+<style>
+:root{
+  --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
+  --line:#232326; --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
+  --danger:#D9534F;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid);-webkit-font-smoothing:antialiased}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
+
+.topbar{height:52px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--text-hi)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
+.topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-low);letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-hi)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--danger);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.head{padding:30px 48px 22px;display:flex;align-items:flex-end;justify-content:space-between}
+.clock{font-family:var(--mono);font-size:52px;color:var(--text-hi);line-height:.9;letter-spacing:-1px}
+.sub{margin-top:13px;font-size:11.5px;color:var(--text-low);letter-spacing:1.2px}
+.kpis{display:flex;gap:40px;padding-bottom:4px}
+.kpi{text-align:right}
+.kpi .v{font-family:var(--mono);font-size:24px;color:var(--text-hi);line-height:1}
+.kpi .v .s{color:var(--text-low);font-size:14px;margin:0 3px}
+.kpi .l{margin-top:8px;font-size:9.5px;letter-spacing:1px;color:var(--text-low)}
+
+.board{padding:0 48px}
+.teamlabel{display:flex;align-items:center;gap:12px;font-size:9.5px;letter-spacing:2px;color:var(--text-low)}
+.teamlabel .ln{flex:1;height:1px;background:var(--line-soft)}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 0 14px}
+.slot{display:flex;flex-direction:column;align-items:center;padding:4px 0;position:relative;transition:transform .18s var(--e)}
+.slot:hover{transform:translateY(-3px)}
+.ava{position:relative;width:76px;height:76px;border-radius:9px;overflow:hidden;background:var(--surface-2);outline:1px solid #2A2A2E}
+.ava img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .3s var(--e),opacity .3s var(--e)}
+.lv{position:absolute;left:-3px;bottom:-3px;min-width:19px;height:16px;padding:0 4px;background:var(--bg);border:1px solid var(--line);border-radius:3px;font-family:var(--mono);font-size:9.5px;color:var(--text-mid);display:flex;align-items:center;justify-content:center}
+.cd{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-family:var(--mono);font-size:25px;color:#FFF;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+.cd span{font-size:11px;color:var(--text-mid);margin-left:2px}
+.slot.dead .cd{display:flex}
+.slot.dead img{filter:grayscale(1) brightness(.35);opacity:.55}
+.slot.dead .ava{outline-color:#202024}
+.slot.dead .nm{color:var(--text-low)}
+.slot.dead .kd{opacity:.5}
+.nm{margin-top:10px;font-size:12.5px;color:var(--text-hi);letter-spacing:.2px}
+.kd{margin-top:4px;font-family:var(--mono);font-size:10px;color:var(--text-mid);letter-spacing:.4px}
+
+.augs{display:flex;gap:4px;margin-top:9px;height:18px}
+.aug{width:18px;height:18px;border:1px solid;border-radius:4px;display:block;background:var(--surface-2);object-fit:cover}
+.aug.s{border-color:rgba(185,192,200,.38)}
+.aug.g{border-color:rgba(217,174,95,.52)}
+.aug.p{border-color:rgba(176,140,255,.62)}
+.aug.empty{background:transparent;border-style:dashed;border-color:#2A2A2E}
+
+.band{display:grid;grid-template-columns:180px 1fr 180px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:4px 0}
+.band .l,.band .r{display:flex;align-items:baseline;gap:8px}
+.band .r{justify-content:flex-end}
+.band .big{font-family:var(--mono);font-size:21px;color:var(--text-hi)}
+.band .k{font-size:9.5px;letter-spacing:1.2px;color:var(--text-low)}
+.band .c{text-align:center;font-size:13px;color:var(--text-hi);letter-spacing:.5px}
+.band .c em{font-style:normal;color:var(--text-low);font-size:11px;margin-left:10px;letter-spacing:1px}
+
+.feed{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;padding:20px 48px 0;border-top:1px solid var(--line-soft);margin-top:16px}
+.fi .t{font-family:var(--mono);font-size:9.5px;color:var(--text-ghost);letter-spacing:.5px}
+.fi .x{margin-top:6px;font-size:11.5px;color:var(--text-mid);line-height:1.5}
+.fi.hot .x{color:var(--danger)}
+
+.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 48px 20px;font-size:9.5px;color:var(--text-ghost)}
+.foot .btn{font-size:10.5px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:4px 11px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">第 14 局 · 海克斯大乱斗 · queue 2400</div>
+    <div class="status"><i></i>LIVE</div>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="clock">12:43</div>
+      <div class="sub">KIWI · 记录中 · 符文槽 3 / 4 已解锁</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">18<span class="s">:</span>12</div><div class="l">击杀</div></div>
+      <div class="kpi"><div class="v">+2.4<span class="s">k</span></div><div class="l">装备价值差</div></div>
+      <div class="kpi"><div class="v">1<span class="s">:</span>0</div><div class="l">防御塔</div></div>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="teamlabel"><span>敌方 · 蓝方</span><span class="ln"></span></div>
+    <div class="slots" id="enemy"></div>
+
+    <div class="band">
+      <div class="l"><span class="big">3</span><span class="k">敌方阵亡</span></div>
+      <div class="c">团战刚结束 · 我方 3 换 1<em>最先复活 6s</em></div>
+      <div class="r"><span class="big">+2.4k</span><span class="k">装备价值</span></div>
+    </div>
+
+    <div class="slots" id="ally"></div>
+    <div class="teamlabel"><span class="ln"></span><span>我方 · 红方</span></div>
+  </div>
+
+  <div class="feed">
+    <div class="fi hot"><div class="t">12:41</div><div class="x">Zed 阵亡 · 被我方集火</div></div>
+    <div class="fi"><div class="t">12:38</div><div class="x">团战结束 · 我方 3 换 1</div></div>
+    <div class="fi"><div class="t">12:31</div><div class="x">敌方推掉上路一塔</div></div>
+  </div>
+
+  <div class="foot">
+    <span>本地客户端接口 · 每 2 秒刷新</span>
+    <span class="btn">收起</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+const A={
+ 1001:['泰坦的坚决','p','https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png'],
+ 1004:['回归基本功','p','https://game.gtimg.cn/images/lol/act/img/rune/backtobasics_small.png'],
+ 1006:['利刃华尔兹','p','https://game.gtimg.cn/images/lol/act/img/rune/bladewaltz_small.png'],
+ 1002:['尖端发明家','g','https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png'],
+ 1005:['喂呜喂呜','g','https://game.gtimg.cn/images/lol/act/img/rune/weewooweewoo_small.png'],
+ 1013:['星界躯体','g','https://game.gtimg.cn/images/lol/act/img/rune/celestialbody_small.png'],
+ 1007:['大力','s','https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png'],
+ 1022:['灵巧','s','https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png'],
+ 1025:['俯冲轰炸','s','https://game.gtimg.cn/images/lol/act/img/rune/divebomber_small.png']
+};
+const ENEMY=[
+ {n:'Zed',      lv:12, kda:'7 / 3 / 4',  cd:'11', dead:1, a:[1001,1006,1004]},
+ {n:'Vi',       lv:10, kda:'2 / 5 / 7',  cd:'0',  dead:0, a:[1013,1002,1007]},
+ {n:"Kai'Sa",   lv:11, kda:'4 / 4 / 3',  cd:'6',  dead:1, a:[1006,1005,1002]},
+ {n:'Darius',   lv:11, kda:'3 / 3 / 1',  cd:'0',  dead:0, a:[1001,1013,1007]},
+ {n:'Nautilus', lv:9,  kda:'0 / 6 / 9',  cd:'12', dead:1, a:[1013,1007]}
+];
+const ALLY=[
+ {n:'Ahri',     lv:11, kda:'6 / 1 / 8',  cd:'0',  dead:0, a:[1001,1002,1007]},
+ {n:'Lee Sin',  lv:10, kda:'3 / 4 / 9',  cd:'4',  dead:1, a:[1002,1007,1022]},
+ {n:'Jinx',     lv:11, kda:'5 / 2 / 5',  cd:'0',  dead:0, a:[1006,1005,1007]},
+ {n:'Lulu',     lv:9,  kda:'0 / 3 / 14', cd:'0',  dead:0, a:[1013,1005]},
+ {n:'Yasuo',    lv:10, kda:'4 / 5 / 2',  cd:'0',  dead:0, a:[1002,1007,1022]}
+];
+const key=n=>'https://cdn.communitydragon.org/latest/champion/'+n.replace(/[^A-Za-z]/g,'')+'/square';
+function slot(p){
+  const picked=p.a.map(id=>{
+    const a=A[id];
+    return a?`<img class="aug ${a[1]}" src="${a[2]}" alt="${a[0]}" title="${a[0]}">`:'';
+  }).join('');
+  const empties=Array.from({length:Math.max(0,4-p.a.length)},()=>'<span class="aug empty"></span>').join('');
+  return `<div class="slot${p.dead?' dead':''}">
+    <div class="ava"><img src="${key(p.n)}" alt=""><span class="lv">${p.lv}</span><span class="cd">${p.dead?p.cd+'<span>s</span>':''}</span></div>
+    <div class="nm">${p.n}</div><div class="kd">${p.kda}</div>
+    <div class="augs">${picked}${empties}</div>
+  </div>`;
+}
+document.getElementById('enemy').innerHTML=ENEMY.map(slot).join('');
+document.getElementById('ally').innerHTML=ALLY.map(slot).join('');
+</script>
+</body>
+</html>

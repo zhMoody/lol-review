@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · S3b 敌方数据受限</title>
+<style>
+:root{
+  --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
+  --line:#232326; --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
+  --danger:#D9534F;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid);-webkit-font-smoothing:antialiased}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
+
+.topbar{height:52px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft)}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--text-hi)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
+.topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-low);letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-hi)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--danger);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.head{padding:28px 48px 18px;display:flex;align-items:flex-end;justify-content:space-between}
+.clock{font-family:var(--mono);font-size:48px;color:var(--text-hi);line-height:.9;letter-spacing:-1px}
+.sub{margin-top:12px;font-size:11.5px;color:var(--text-low);letter-spacing:1.2px}
+.kpis{display:flex;gap:40px;padding-bottom:4px}
+.kpi{text-align:right}
+.kpi .v{font-family:var(--mono);font-size:24px;color:var(--text-hi);line-height:1}
+.kpi .v .s{color:var(--text-low);font-size:14px;margin:0 3px}
+.kpi .v.na{color:var(--text-ghost)}
+.kpi .l{margin-top:8px;font-size:9.5px;letter-spacing:1px;color:var(--text-low)}
+
+.notice{margin:0 48px 6px;display:flex;align-items:center;gap:12px;padding:11px 16px;border:1px dashed var(--line);border-radius:6px}
+.notice i{width:5px;height:5px;border-radius:50%;background:var(--danger);flex:none}
+.notice span{font-size:11px;letter-spacing:.6px;color:var(--text-low)}
+
+.board{padding:0 48px}
+.teamlabel{display:flex;align-items:center;gap:12px;font-size:9.5px;letter-spacing:2px;color:var(--text-low)}
+.teamlabel .ln{flex:1;height:1px;background:var(--line-soft)}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:12px 0 14px}
+
+.slot{display:flex;flex-direction:column;align-items:center;padding:8px 0;position:relative}
+.ava{position:relative;width:76px;height:76px;border-radius:9px;overflow:hidden;background:var(--surface-2);outline:1px solid #2A2A2E}
+.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.ava.dim img{filter:grayscale(1) brightness(.5);opacity:.6}
+.slot.na .ava{outline-style:dashed;outline-color:#222226}
+.nm{margin-top:10px;font-size:12.5px;color:var(--text-hi);letter-spacing:.2px}
+.slot.na .nm{color:var(--text-low)}
+.kd{margin-top:4px;font-family:var(--mono);font-size:10px;color:var(--text-mid);letter-spacing:.4px}
+.slot.na .kd{color:var(--text-ghost);font-family:var(--sans);letter-spacing:.6px}
+.augs{display:flex;gap:4px;margin-top:9px;height:18px}
+.aug{width:18px;height:18px;border:1px solid;border-radius:4px;display:block;background:var(--surface-2);object-fit:cover}
+.aug.s{border-color:rgba(185,192,200,.38)}
+.aug.g{border-color:rgba(217,174,95,.52)}
+.aug.p{border-color:rgba(176,140,255,.62)}
+.aug.empty{background:transparent;border-style:dashed;border-color:#2A2A2E}
+.slot.na .augs{opacity:.35}
+
+.cd{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-family:var(--mono);font-size:25px;color:#FFF;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+.cd span{font-size:11px;color:var(--text-mid);margin-left:2px}
+.slot.dead .cd{display:flex}
+.slot.dead img{filter:grayscale(1) brightness(.35);opacity:.55}
+.slot.dead .nm{color:var(--text-low)}
+.lv{position:absolute;left:-3px;bottom:-3px;min-width:19px;height:16px;padding:0 4px;background:var(--bg);border:1px solid var(--line);border-radius:3px;font-family:var(--mono);font-size:9.5px;color:var(--text-mid);display:flex;align-items:center;justify-content:center}
+.slot.na .lv{display:none}
+
+.band{display:grid;grid-template-columns:180px 1fr 180px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin:4px 0}
+.band .l,.band .r{display:flex;align-items:baseline;gap:8px}
+.band .r{justify-content:flex-end}
+.band .big{font-family:var(--mono);font-size:21px;color:var(--text-hi)}
+.band .big.na{color:var(--text-ghost)}
+.band .k{font-size:9.5px;letter-spacing:1.2px;color:var(--text-low)}
+.band .c{text-align:center;font-size:13px;color:var(--text-hi);letter-spacing:.5px}
+.band .c em{font-style:normal;color:var(--text-low);font-size:11px;margin-left:10px;letter-spacing:1px}
+
+.foot{display:flex;justify-content:space-between;align-items:center;padding:18px 48px 22px;font-size:9.5px;color:var(--text-ghost)}
+.foot .btn{font-size:10.5px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:4px 11px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">第 14 局 · 海克斯大乱斗 · queue 2400</div>
+    <div class="status"><i></i>数据受限</div>
+  </div>
+
+  <div class="head">
+    <div>
+      <div class="clock">12:43</div>
+      <div class="sub">KIWI · 记录中 · 我方数据正常</div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="v">18<span class="s">:</span><span class="na">—</span></div><div class="l">击杀</div></div>
+      <div class="kpi"><div class="v na">—</div><div class="l">装备价值差</div></div>
+      <div class="kpi"><div class="v">1<span class="s">:</span><span class="na">—</span></div><div class="l">防御塔</div></div>
+    </div>
+  </div>
+
+  <div class="notice">
+    <i></i>
+    <span>敌方数据当前不可用 · 官方接口限制 · 我方数据不受影响</span>
+  </div>
+
+  <div class="board">
+    <div class="teamlabel"><span>敌方 · 蓝方</span><span class="ln"></span></div>
+    <div class="slots">
+      <div class="slot na"><div class="ava dim"><img src="https://cdn.communitydragon.org/latest/champion/Zed/square" alt=""></div>
+        <div class="nm">Zed</div><div class="kd">数据不可用</div></div>
+      <div class="slot na"><div class="ava dim"><img src="https://cdn.communitydragon.org/latest/champion/Vi/square" alt=""></div>
+        <div class="nm">Vi</div><div class="kd">数据不可用</div></div>
+      <div class="slot na"><div class="ava dim"><img src="https://cdn.communitydragon.org/latest/champion/KaiSa/square" alt=""></div>
+        <div class="nm">Kai'Sa</div><div class="kd">数据不可用</div></div>
+      <div class="slot na"><div class="ava dim"><img src="https://cdn.communitydragon.org/latest/champion/Darius/square" alt=""></div>
+        <div class="nm">Darius</div><div class="kd">数据不可用</div></div>
+      <div class="slot na"><div class="ava dim"><img src="https://cdn.communitydragon.org/latest/champion/Nautilus/square" alt=""></div>
+        <div class="nm">Nautilus</div><div class="kd">数据不可用</div></div>
+    </div>
+
+    <div class="band">
+      <div class="l"><span class="big">—</span><span class="k">敌方阵亡</span></div>
+      <div class="c">我方数据正常记录中<em>敌方信息等待结算补全</em></div>
+      <div class="r"><span class="big na">—</span><span class="k">装备价值</span></div>
+    </div>
+
+    <div class="slots">
+      <div class="slot">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Ahri/square" alt=""><span class="lv">11</span></div>
+        <div class="nm">Ahri</div><div class="kd">6 / 1 / 8</div>
+        <div class="augs"><img class="aug p" src="https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png" alt=""><img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt=""><span class="aug empty"></span></div>
+      </div>
+      <div class="slot dead">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/LeeSin/square" alt=""><span class="lv">10</span><span class="cd">4<span>s</span></span></div>
+        <div class="nm">Lee Sin</div><div class="kd">3 / 4 / 9</div>
+        <div class="augs"><img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png" alt=""><span class="aug empty"></span></div>
+      </div>
+      <div class="slot">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Jinx/square" alt=""><span class="lv">11</span></div>
+        <div class="nm">Jinx</div><div class="kd">5 / 2 / 5</div>
+        <div class="augs"><img class="aug p" src="https://game.gtimg.cn/images/lol/act/img/rune/bladewaltz_small.png" alt=""><img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/weewooweewoo_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt=""><span class="aug empty"></span></div>
+      </div>
+      <div class="slot">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Lulu/square" alt=""><span class="lv">9</span></div>
+        <div class="nm">Lulu</div><div class="kd">0 / 3 / 14</div>
+        <div class="augs"><img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/celestialbody_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png" alt=""><span class="aug empty"></span><span class="aug empty"></span></div>
+      </div>
+      <div class="slot">
+        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""><span class="lv">10</span></div>
+        <div class="nm">Yasuo</div><div class="kd">4 / 5 / 2</div>
+        <div class="augs"><img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt=""><img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png" alt=""><span class="aug empty"></span></div>
+      </div>
+    </div>
+    <div class="teamlabel"><span class="ln"></span><span>我方 · 红方</span></div>
+  </div>
+
+  <div class="foot">
+    <span>本地客户端接口 · 我方数据每 2 秒刷新</span>
+    <span class="btn">收起</span>
+  </div>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · S0 客户端未启动</title>
+<style>
+:root{
+  --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
+  --line:#232326; --line-soft:#1A1A1D;
+  --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid);-webkit-font-smoothing:antialiased}
+.stage{display:flex;justify-content:center;padding:28px}
+.app{width:1280px;min-height:640px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A;display:flex;flex-direction:column}
+
+.topbar{height:52px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft);flex:none}
+.brand{display:flex;align-items:center;gap:10px}
+.mark{width:9px;height:9px;background:var(--text-low)}
+.brand b{font-size:13px;font-weight:500;color:var(--text-mid);letter-spacing:.3px}
+.topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-ghost);letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-low)}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--text-ghost)}
+
+.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 48px 40px}
+.ring{width:88px;height:88px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.ring i{width:8px;height:8px;border-radius:50%;background:var(--text-ghost)}
+.h1{margin-top:30px;font-size:22px;font-weight:500;color:var(--text-hi);letter-spacing:2px}
+.h2{margin-top:14px;font-size:12px;color:var(--text-ghost);letter-spacing:1.2px}
+.rescan{margin-top:30px;font-size:12px;color:var(--text-mid);border:1px solid var(--line);border-radius:6px;padding:8px 22px;cursor:pointer;transition:all .15s var(--e);letter-spacing:.6px}
+.rescan:hover{border-color:var(--text-low);color:var(--text-hi)}
+.retry{margin-top:18px;font-size:10.5px;letter-spacing:1px;color:var(--text-ghost);opacity:0;transition:opacity .2s var(--e)}
+.retry.show{opacity:1}
+.retry a{color:var(--text-mid);text-decoration:underline;text-underline-offset:3px}
+
+.hist{flex:none;border-top:1px solid var(--line-soft);padding:18px 48px;display:flex;gap:44px}
+.hist .i{display:flex;align-items:baseline;gap:10px}
+.hist .l{font-size:9.5px;letter-spacing:1.2px;color:var(--text-ghost)}
+.hist .v{font-family:var(--mono);font-size:11.5px;color:var(--text-low)}
+.hist .v.hl{color:var(--text-mid)}
+
+.foot{flex:none;padding:0 48px 20px;font-size:9.5px;color:#2E2E33}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand"><span class="mark"></span><b>战报</b></div>
+    <div class="mid">未连接</div>
+    <div class="status"><i></i>客户端未启动</div>
+  </div>
+
+  <div class="center">
+    <div class="ring"><i></i></div>
+    <div class="h1">请启动英雄联盟客户端</div>
+    <div class="h2">启动后会自动连接，不需要任何操作</div>
+    <div class="rescan">重新扫描</div>
+    <div class="retry" id="retry">找不到客户端？<a>手动指定安装路径</a></div>
+  </div>
+
+  <div class="hist">
+    <div class="i"><span class="l">上次连接</span><span class="v hl">今天 14:02</span></div>
+    <div class="i"><span class="l">上次对局</span><span class="v">失败 · 28:41 · Ahri 12/4/7</span></div>
+    <div class="i"><span class="l">累计记录</span><span class="v">14 局</span></div>
+  </div>
+
+  <div class="foot">数据来源：本地客户端接口 · 断网可用</div>
+
+</div>
+</div>
+<script>
+document.querySelector('.rescan').addEventListener('click',function(){
+  const t=document.getElementById('retry');
+  this.textContent='扫描中…';
+  setTimeout(()=>{this.textContent='重新扫描';t.classList.add('show');},900);
+});
+</script>
+</body>
+</html>

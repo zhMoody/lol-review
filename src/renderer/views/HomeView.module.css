@@ -1,0 +1,288 @@
+.root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.identity {
+  padding: var(--sp-10) var(--sp-12) var(--sp-6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.idl {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+.portrait {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--r-lg);
+  background: var(--surface-2);
+  outline: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--text-low);
+  flex: none;
+}
+
+.name {
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.tags {
+  margin-top: var(--sp-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: 11px;
+  letter-spacing: 0.8px;
+  color: var(--text-low);
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: var(--r-full);
+  background: var(--text-ghost);
+}
+
+.kpis {
+  display: flex;
+  gap: var(--sp-10);
+  padding-bottom: var(--sp-1);
+}
+
+.kpi {
+  text-align: right;
+}
+
+.kv {
+  font-family: var(--font-num);
+  font-size: 27px;
+  color: var(--text-hi);
+  line-height: 1;
+}
+
+.kl {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-low);
+}
+
+/* ── 历史列表 ───────────────────────────────────── */
+.hist {
+  border-top: 1px solid var(--line-soft);
+}
+
+.hhead {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-12) var(--sp-3);
+}
+
+.h3 {
+  margin: 0;
+  font-size: var(--fs-micro);
+  letter-spacing: 2.5px;
+  color: var(--text-low);
+  font-weight: 500;
+}
+
+.ln {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.hint {
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-ghost);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 14px 34px 1fr 108px 66px 52px 84px;
+  gap: var(--sp-4);
+  align-items: center;
+  height: 52px;
+  padding: 0 var(--sp-12);
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  position: relative;
+  transition: background var(--d-instant) var(--e);
+  width: 100%;
+}
+
+.row:hover {
+  background: var(--surface);
+}
+
+.row::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--danger);
+  transition: width var(--d-instant) var(--e);
+}
+
+.crime:hover::after {
+  width: 2px;
+}
+
+.mark {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+}
+
+.markWin {
+  background: var(--text-hi);
+}
+
+.markLoss {
+  background: transparent;
+  border: 1px solid var(--text-low);
+}
+
+.thumb {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-name);
+  color: var(--text-low);
+}
+
+.rn {
+  font-size: var(--fs-body);
+  color: var(--text-hi);
+  letter-spacing: 0.2px;
+}
+
+.rn em {
+  font-style: normal;
+  color: var(--text-ghost);
+  margin-left: var(--sp-3);
+  font-family: var(--font-num);
+  font-size: var(--fs-micro);
+}
+
+.rkda {
+  font-family: var(--font-num);
+  font-size: var(--fs-body);
+  color: var(--text-mid);
+  letter-spacing: 0.3px;
+}
+
+.rtime {
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  color: var(--text-ghost);
+}
+
+.rscore {
+  font-family: var(--font-num);
+  font-size: var(--fs-num-sm);
+  color: var(--text-hi);
+  text-align: right;
+}
+
+.rtag {
+  font-size: var(--fs-micro);
+  letter-spacing: 0.8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  padding: 3px var(--sp-2);
+  color: var(--text-low);
+  justify-self: start;
+}
+
+.rtagBad {
+  color: var(--danger);
+  border-color: rgba(217, 83, 79, 0.4);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-10);
+  padding: var(--sp-5) var(--sp-12);
+  border-top: 1px solid var(--line-soft);
+  margin-top: auto;
+}
+
+.s {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.sv {
+  font-family: var(--font-num);
+  font-size: var(--fs-num-sm);
+  color: var(--text-hi);
+}
+
+.svBad {
+  color: var(--danger);
+}
+
+.sl {
+  font-size: var(--fs-micro);
+  letter-spacing: 1.2px;
+  color: var(--text-low);
+}
+
+.wait {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  color: var(--text-low);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) var(--sp-4);
+}
+
+.wait i {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--aug-prism);
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}

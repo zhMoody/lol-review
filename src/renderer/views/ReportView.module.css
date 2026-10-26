@@ -1,0 +1,416 @@
+.root {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--sp-6);
+  padding: var(--sp-6) var(--sp-12) var(--sp-5);
+  min-height: 0;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  min-width: 0;
+}
+
+/* ── 结果横幅 ───────────────────────────────────── */
+.banner {
+  position: relative;
+  overflow: hidden;
+  height: 108px;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: var(--sp-5) var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.meta {
+  position: absolute;
+  top: var(--sp-5);
+  right: var(--sp-6);
+  font-size: var(--fs-body);
+  color: var(--text-mid);
+}
+
+.result {
+  font-size: var(--fs-result);
+  font-weight: 700;
+  letter-spacing: 10px;
+  line-height: 0.9;
+  color: var(--state-loss);
+}
+
+.kda {
+  margin-top: var(--sp-3);
+  font-family: var(--font-num);
+  font-size: var(--fs-num);
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
+.kk {
+  color: var(--aug-gold);
+}
+
+.ka {
+  color: var(--aug-prism);
+}
+
+.sep {
+  color: var(--text-ghost);
+  font-size: 18px;
+}
+
+.unit {
+  margin-left: var(--sp-2);
+  font-size: var(--fs-body);
+  font-family: var(--font-sans);
+  color: var(--text-low);
+  letter-spacing: 0.5px;
+}
+
+.sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(200, 170, 110, 0.1), transparent);
+  clip-path: inset(0 100% 0 0);
+  animation: sweep 1000ms var(--e) 200ms forwards;
+}
+
+@keyframes sweep {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ── 阵容 ───────────────────────────────────────── */
+.lineup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.teamLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-micro);
+  letter-spacing: 2px;
+  color: var(--text-low);
+}
+
+.ln {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0 var(--sp-2);
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-1) 0;
+  position: relative;
+}
+
+.idx {
+  font-family: var(--font-num);
+  font-size: 9px;
+  color: var(--text-ghost);
+  margin-bottom: var(--sp-2);
+  letter-spacing: 1px;
+}
+
+.ava {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  outline: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--text-low);
+}
+
+.slotCrime .ava {
+  outline: 1.5px solid var(--danger);
+}
+
+.pill {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 24px;
+  height: 17px;
+  padding: 0 var(--sp-1);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--r-chip);
+  font-family: var(--font-num);
+  font-size: var(--fs-micro);
+  color: var(--text-hi);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nm {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-body);
+  color: var(--text-hi);
+  letter-spacing: 0.2px;
+}
+
+.kd {
+  margin-top: var(--sp-1);
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  color: var(--text-mid);
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+
+/* ── 结论三栏 ───────────────────────────────────── */
+.verdict {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  margin-top: var(--sp-2);
+}
+
+.vd {
+  padding: var(--sp-6) var(--sp-8);
+  border-right: 1px solid var(--line-soft);
+}
+
+.vd:last-child {
+  border-right: 0;
+}
+
+.vd:first-child {
+  padding-left: 0;
+}
+
+.vk {
+  font-size: var(--fs-micro);
+  letter-spacing: 2px;
+  color: var(--text-low);
+}
+
+.vn {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-verdict);
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 0.4px;
+}
+
+.vnBad {
+  color: var(--danger);
+}
+
+.vr {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--text-mid);
+}
+
+/* ── 罪状 ───────────────────────────────────────── */
+.indict {
+  display: grid;
+  grid-template-columns: 1fr 268px;
+  gap: var(--sp-10);
+  padding: var(--sp-6) 0 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.ihd {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.ih {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: var(--text-low);
+  font-weight: 500;
+}
+
+.iwho {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--danger);
+  letter-spacing: 0.4px;
+}
+
+.charge {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: baseline;
+  padding: var(--sp-2) 0;
+  border-top: 1px solid var(--surface-2);
+}
+
+.charge:first-of-type {
+  border-top: 0;
+}
+
+.ct {
+  font-family: var(--font-num);
+  font-size: 10.5px;
+  color: var(--text-ghost);
+  width: 40px;
+  flex: none;
+}
+
+.cp {
+  font-size: 11px;
+  color: var(--text-low);
+  width: 72px;
+  flex: none;
+  letter-spacing: 0.4px;
+}
+
+.cx {
+  font-size: var(--fs-body);
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.cx b {
+  font-family: var(--font-num);
+  font-weight: 400;
+  color: var(--danger);
+}
+
+.dmap {
+  align-self: center;
+}
+
+.dcap {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: var(--text-ghost);
+  margin-top: 2px;
+}
+
+/* ── 详情条 ─────────────────────────────────────── */
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding-top: var(--sp-1);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-4);
+}
+
+.st {
+  text-align: left;
+}
+
+.stv {
+  font-family: var(--font-num);
+  font-size: var(--fs-num-sm);
+  color: var(--text-hi);
+}
+
+.stl {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 0.8px;
+  color: var(--text-low);
+}
+
+.stbar {
+  margin-top: var(--sp-2);
+  height: 2px;
+  background: var(--line);
+}
+
+.stbar i {
+  display: block;
+  height: 100%;
+  background: var(--text-low);
+}
+
+.stHot {
+  background: var(--danger) !important;
+}
+
+.augBlock {
+  margin-top: var(--sp-2);
+}
+
+.augLabel {
+  font-size: var(--fs-micro);
+  letter-spacing: 1px;
+  color: var(--text-low);
+  margin-bottom: var(--sp-2);
+}
+
+.augs {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.aug {
+  width: 26px;
+  height: 26px;
+  border: 1px solid;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-micro);
+  background: var(--surface-2);
+}
+
+.augSilver {
+  border-color: rgba(185, 192, 200, 0.45);
+  color: var(--aug-silver);
+}
+
+.augGold {
+  border-color: rgba(217, 174, 95, 0.6);
+  color: var(--aug-gold);
+}
+
+.augPrism {
+  border-color: rgba(176, 140, 255, 0.7);
+  color: var(--aug-prism);
+}
+
+.augNames {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  line-height: 1.55;
+  color: var(--text-low);
+  letter-spacing: 0.2px;
+}

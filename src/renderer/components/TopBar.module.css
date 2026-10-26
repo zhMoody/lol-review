@@ -1,0 +1,129 @@
+/* 整条可拖动窗口；交互元素必须 no-drag */
+.bar {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-4) 0 var(--sp-12);
+  border-bottom: 1px solid var(--line-soft);
+  flex: none;
+  -webkit-app-region: drag;
+  app-region: drag;
+  user-select: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 300px;
+}
+
+.mark {
+  width: 9px;
+  height: 9px;
+  background: var(--text-hi);
+}
+
+.name {
+  font-size: var(--fs-name);
+  font-weight: 500;
+  color: var(--text-hi);
+  letter-spacing: 0.3px;
+}
+
+.mid {
+  margin: 0 auto;
+  font-size: var(--fs-cap);
+  color: var(--text-low);
+  letter-spacing: 1px;
+}
+
+.right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  /* 右侧是交互区，必须退出拖动 */
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-micro);
+  letter-spacing: 1.5px;
+  color: var(--text-hi);
+}
+
+.dot,
+.dotBreathing {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+}
+
+.dotBreathing {
+  animation: breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dotBreathing {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── 窗口控制：只有缩小与关闭，无放大 ───────────────── */
+.winControls {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-left: var(--sp-3);
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--line-soft);
+  height: 24px;
+}
+
+.winBtn {
+  width: 30px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--r-chip);
+  background: transparent;
+  color: var(--text-low);
+  cursor: pointer;
+  font-family: inherit;
+  transition:
+    background var(--d-instant) var(--e),
+    color var(--d-instant) var(--e);
+}
+
+.winBtn:hover {
+  background: var(--surface-3);
+  color: var(--text-hi);
+}
+
+.winBtn:active {
+  background: var(--line);
+}
+
+/* 关闭按钮 hover 用 danger —— 全局唯一的红之一 */
+.winClose:hover {
+  background: var(--danger);
+  color: var(--text-hi);
+}
