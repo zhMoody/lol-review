@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>LoL 战报 · 原型串联</title>
+<style>
+:root{
+  --bg:#060607; --panel:#0A0A0B; --line:#1A1A1D; --line-2:#232326;
+  --hi:#F2F2F3; --mid:#9E9EA4; --low:#6A6A70; --ghost:#3E3E43;
+  --e:cubic-bezier(.22,1,.36,1);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
+  --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);font-family:var(--sans);color:var(--mid);-webkit-font-smoothing:antialiased}
+
+/* ── 原型导航（正式版没有这一条，由状态机直接切）── */
+.nav{
+  height:46px;display:flex;align-items:center;gap:18px;padding:0 22px;
+  background:var(--panel);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:10;
+}
+.nav .brand{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--hi);letter-spacing:.3px}
+.nav .brand i{width:8px;height:8px;background:var(--hi);display:block}
+.nav .brand em{font-style:normal;color:var(--ghost);font-size:10px;letter-spacing:1.2px;margin-left:2px}
+
+.tabs{display:flex;align-items:center;gap:2px;margin-left:8px}
+.tabs button{
+  font-family:inherit;font-size:11.5px;letter-spacing:.6px;color:var(--low);
+  background:transparent;border:1px solid transparent;border-radius:5px;
+  padding:5px 12px;cursor:pointer;transition:.15s var(--e);white-space:nowrap;
+}
+.tabs button:hover{color:var(--mid);border-color:var(--line-2)}
+.tabs button.on{color:var(--hi);background:#141416;border-color:var(--line-2)}
+.tabs button .k{font-family:var(--mono);font-size:9.5px;color:var(--ghost);margin-right:6px}
+.tabs button.on .k{color:var(--low)}
+
+.nav .note{margin-left:auto;font-size:10px;color:var(--ghost);letter-spacing:.6px}
+
+/* ── 视图 ── */
+.view{position:relative}
+iframe{
+  display:block;width:100%;border:0;background:var(--bg);
+  transition:height .26s var(--e);
+}
+.fade{position:absolute;inset:0;background:var(--bg);opacity:0;pointer-events:none;
+  transition:opacity .18s var(--e)}
+.fade.on{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="brand"><i></i>战报<em>PROTOTYPE</em></div>
+  <div class="tabs" id="tabs">
+    <button data-page="home"><span class="k">S1</span>已连接 · 空闲</button>
+    <button data-page="report"><span class="k">S5</span>本局战报</button>
+    <button data-page="timeline">对局回放</button>
+  </div>
+  <div class="note">正式版由状态机切换，没有这一条</div>
+</div>
+
+<div class="view">
+  <iframe id="view" src="home.html" title="预览"></iframe>
+  <div class="fade" id="fade"></div>
+</div>
+
+<script>
+const FRAME = document.getElementById('view');
+const FADE = document.getElementById('fade');
+const TABS = [...document.querySelectorAll('#tabs button')];
+
+/* 每屏的高度策略：
+   home / report 是 1280 固定宽 + 内容撑高，用它们报上来的真实高度；
+   timeline 是 100% 高布局，必须给固定值，否则 body{height:100%} 会自我循环。 */
+const FIXED = { timeline: 880 };
+
+let current = 'home';
+
+function setActive(page){
+  TABS.forEach(b => b.classList.toggle('on', b.dataset.page === page));
+}
+
+function go(page, opts){
+  if (!document.querySelector('[data-page="' + page + '"]')) return;
+  const instant = opts && opts.instant;
+  current = page;
+
+  if (page !== 'home') location.hash = page;
+  else history.replaceState(null, '', location.pathname);
+
+  setActive(page);
+
+  if (instant){
+    FRAME.src = page + '.html';
+    if (FIXED[page]) FRAME.style.height = FIXED[page] + 'px';
+    return;
+  }
+
+  // 切换时盖一层，避免 iframe 重载闪白
+  FADE.classList.add('on');
+  setTimeout(function(){
+    FRAME.src = page + '.html';
+    if (FIXED[page]) FRAME.style.height = FIXED[page] + 'px';
+    else FRAME.style.height = '600px';
+  }, 120);
+}
+
+FRAME.addEventListener('load', function(){
+  setTimeout(function(){ FADE.classList.remove('on'); }, 40);
+});
+
+/* 子页面通过 postMessage 报高度、发跳转 */
+window.addEventListener('message', function(e){
+  if (e.source !== FRAME.contentWindow) return;
+  const d = e.data;
+  if (!d || d.__proto !== 1) return;
+
+  if (d.height && !FIXED[current]){
+    // 留 2px 余量，避免小数高度导致出现滚动条
+    FRAME.style.height = Math.max(240, Math.round(d.height) + 2) + 'px';
+  }
+  if (d.nav) go(d.nav);
+});
+
+TABS.forEach(function(b){
+  b.addEventListener('click', function(){ go(b.dataset.page); });
+});
+
+/* 数字键切屏，评审时比点按钮快 */
+document.addEventListener('keydown', function(e){
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  const map = { '1': 'home', '2': 'report', '3': 'timeline' };
+  if (map[e.key]) go(map[e.key]);
+});
+
+/* 初始页由 hash 决定，方便直接截某一屏 */
+(function(){
+  const h = location.hash.replace('#', '');
+  const page = ['home', 'report', 'timeline'].indexOf(h) >= 0 ? h : 'home';
+  setActive(page);
+  current = page;
+  FRAME.src = page + '.html';
+  if (FIXED[page]) FRAME.style.height = FIXED[page] + 'px';
+})();
+</script>
+</body>
+</html>

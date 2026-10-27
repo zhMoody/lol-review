@@ -8,7 +8,7 @@
   --bg:#0A0A0B; --bg-deep:#060607; --surface:#131315; --surface-2:#1A1A1D;
   --line:#232326; --line-soft:#1A1A1D;
   --text-hi:#F2F2F3; --text-mid:#9E9EA4; --text-low:#6A6A70; --text-ghost:#3E3E43;
-  --danger:#D9534F;
+  --danger:#D9534F; --teal:#2FD6C2;
   --e:cubic-bezier(.22,1,.36,1);
   --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
   --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
@@ -24,7 +24,7 @@ html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid
 .brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
 .topbar .mid{margin:0 auto;font-size:11.5px;color:var(--text-low);letter-spacing:1px}
 .status{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:1.5px;color:var(--text-hi)}
-.status i{width:5px;height:5px;border-radius:50%;background:#2FD6C2;animation:pulse 2.4s ease-in-out infinite}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 
 /* 身份 */
@@ -32,13 +32,20 @@ html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid
 .idl{display:flex;align-items:center;gap:20px}
 .portrait{width:88px;height:88px;border-radius:12px;overflow:hidden;background:var(--surface-2);outline:1px solid #2A2A2E}
 .portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.portrait.fallback,.thumb.fallback{display:flex;align-items:center;justify-content:center;
+  background:var(--surface-2);color:var(--text-low);font-weight:500}
+.portrait.fallback{font-size:30px}
+.thumb.fallback{font-size:12px}
 .name{font-size:32px;font-weight:500;color:var(--text-hi);letter-spacing:1px;line-height:1}
+.name em{font-style:normal;font-size:14px;color:var(--text-low);letter-spacing:0;margin-left:10px}
 .tags{margin-top:12px;display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.8px;color:var(--text-low)}
 .tags .dot{width:3px;height:3px;border-radius:50%;background:var(--text-ghost)}
+.tags .na{color:var(--text-ghost)}
+.tags .rr{color:var(--teal)}
 .kpis{display:flex;gap:44px;padding-bottom:4px}
 .kpi{text-align:right}
 .kpi .v{font-family:var(--mono);font-size:27px;color:var(--text-hi);line-height:1}
-.kpi .v .s{color:var(--text-low);font-size:14px;margin:0 2px}
+.kpi .v .s{color:#7A7A82;font-size:15px;margin:0 3px}
 .kpi .l{margin-top:8px;font-size:9.5px;letter-spacing:1px;color:var(--text-low)}
 
 /* 战绩 */
@@ -53,27 +60,34 @@ html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid
 .row.crime:hover::after{width:2px}
 .markw{width:5px;height:5px;border-radius:50%}
 .markw.w{background:var(--text-hi)}
-.markw.l{background:transparent;border:1px solid #55555C}
+.markw.l{background:transparent;border:1px solid #4A4A50}
 .thumb{width:30px;height:30px;border-radius:6px;overflow:hidden;background:var(--surface-2)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .rn{font-size:12.5px;color:var(--text-hi);letter-spacing:.2px}
 .rn em{font-style:normal;color:var(--text-ghost);margin-left:10px;font-family:var(--mono);font-size:10px}
 .rkda{font-family:var(--mono);font-size:12px;color:var(--text-mid);letter-spacing:.3px}
+.rkda .sep{color:#4E4E55}
 .rkda em{font-style:normal;color:var(--danger);opacity:.9}
 .rtime{font-family:var(--mono);font-size:10.5px;color:var(--text-ghost)}
 .rscore{font-family:var(--mono);font-size:15px;color:var(--text-hi);text-align:right}
-.rtag{font-size:10px;letter-spacing:.8px;border:1px solid var(--line);border-radius:4px;padding:3px 8px;justify-self:start;color:var(--text-low)}
+.rtag{font-size:10px;letter-spacing:.8px;border:1px solid var(--line);border-radius:4px;padding:3px 8px;justify-self:start;color:var(--text-low);white-space:nowrap}
 .rtag.bad{color:var(--danger);border-color:rgba(217,83,79,.4)}
 .rtag.good{color:var(--text-hi);border-color:#2A2A2E}
 
+/* 空状态 */
+.empty{padding:26px 48px 30px;border-top:1px solid var(--line-soft)}
+.empty .t{font-size:12px;color:var(--text-low);letter-spacing:.6px}
+.empty .s{margin-top:8px;font-size:10.5px;color:var(--text-ghost);letter-spacing:.5px;line-height:1.7}
+
 /* 汇总 */
-.summary{display:flex;align-items:center;gap:36px;padding:20px 48px;border-top:1px solid var(--line-soft)}
-.summary .s{display:flex;align-items:baseline;gap:8px}
-.summary .s .v{font-family:var(--mono);font-size:16px;color:var(--text-hi)}
-.summary .s .v.bad{color:var(--danger)}
-.summary .s .l{font-size:9.5px;letter-spacing:1.2px;color:var(--text-low)}
+.sumbar{display:flex;align-items:center;padding:20px 48px;border-top:1px solid var(--line-soft)}
+.sumitems{display:flex;align-items:center;gap:36px}
+.sumitems .s{display:flex;align-items:baseline;gap:8px}
+.sumitems .s .v{font-family:var(--mono);font-size:16px;color:var(--text-hi)}
+.sumitems .s .v.bad{color:var(--danger)}
+.sumitems .s .l{font-size:9.5px;letter-spacing:1.2px;color:var(--text-low)}
 .wait{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.2px;color:var(--text-low);border:1px dashed var(--line);border-radius:6px;padding:8px 16px}
-.wait i{width:5px;height:5px;border-radius:50%;background:#2FD6C2;animation:pulse 2.4s ease-in-out infinite}
+.wait i{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:pulse 2.4s ease-in-out infinite}
 
 .foot{display:flex;justify-content:space-between;align-items:center;padding:0 48px 22px;font-size:9.5px;color:var(--text-ghost)}
 .foot .btn{font-size:10.5px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:4px 11px}
@@ -93,101 +107,176 @@ html,body{background:var(--bg-deep);font-family:var(--sans);color:var(--text-mid
 
   <div class="identity">
     <div class="idl">
-      <div class="portrait"><img src="https://cdn.communitydragon.org/latest/champion/Ahri/square" alt=""></div>
+      <div class="portrait"><img id="icon" alt=""></div>
       <div>
-        <div class="name">Konata</div>
-        <div class="tags">
-          <span>等级 512</span><span class="dot"></span>
-          <span>钻石 II</span><span class="dot"></span>
-          <span>海克斯大乱斗 47 局</span>
-        </div>
+        <div class="name" id="name"></div>
+        <div class="tags" id="tags"></div>
       </div>
     </div>
-    <div class="kpis">
-      <div class="kpi"><div class="v">52<span class="s">%</span></div><div class="l">近 20 局胜率</div></div>
-      <div class="kpi"><div class="v">7.2<span class="s">/</span>6.1<span class="s">/</span>9.4</div><div class="l">场均 K / D / A</div></div>
-      <div class="kpi"><div class="v">63</div><div class="l">平均评分</div></div>
-    </div>
+    <div class="kpis" id="kpis"></div>
   </div>
 
   <div class="hist">
-    <div class="hhead"><h3>最 近 战 报</h3><span class="ln"></span><span class="hint">点任意一行看完整报告</span></div>
-
-    <div class="row">
-      <span class="markw l"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Ahri/square" alt=""></div>
-      <div class="rn">Ahri<em>昨天 22:41</em></div>
-      <div class="rkda">12 <span style="color:var(--text-ghost)">/</span> 4 <span style="color:var(--text-ghost)">/</span> 7</div>
-      <div class="rtime">28:41</div>
-      <div class="rscore">73</div>
-      <div class="rtag good">尽力局长</div>
+    <div class="hhead"><h3>最 近 战 报</h3><span class="ln"></span><span class="hint" id="hint"></span></div>
+    <div id="rows"></div>
+    <div class="empty" id="empty" style="display:none">
+      <div class="t">还没有记录到的对局</div>
+      <div class="s">开一局海克斯大乱斗，结束后这里会出现第一条战报。<br>数据从本地客户端读取，不上传任何内容。</div>
     </div>
-
-    <div class="row crime">
-      <span class="markw l"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""></div>
-      <div class="rn">Yasuo<em>昨天 22:18</em></div>
-      <div class="rkda">2 <span style="color:var(--text-ghost)">/</span> <em>11</em> <span style="color:var(--text-ghost)">/</span> 4</div>
-      <div class="rtime">22:16</div>
-      <div class="rscore">28</div>
-      <div class="rtag bad">蛆</div>
-    </div>
-
-    <div class="row">
-      <span class="markw w"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Lux/square" alt=""></div>
-      <div class="rn">Lux<em>昨天 21:52</em></div>
-      <div class="rkda">8 <span style="color:var(--text-ghost)">/</span> 2 <span style="color:var(--text-ghost)">/</span> 15</div>
-      <div class="rtime">19:32</div>
-      <div class="rscore">66</div>
-      <div class="rtag">工具人</div>
-    </div>
-
-    <div class="row">
-      <span class="markw w"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Jinx/square" alt=""></div>
-      <div class="rn">Jinx<em>昨天 21:24</em></div>
-      <div class="rkda">14 <span style="color:var(--text-ghost)">/</span> 3 <span style="color:var(--text-ghost)">/</span> 6</div>
-      <div class="rtime">17:44</div>
-      <div class="rscore">88</div>
-      <div class="rtag good">大腿</div>
-    </div>
-
-    <div class="row">
-      <span class="markw l"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Garen/square" alt=""></div>
-      <div class="rn">Garen<em>昨天 20:58</em></div>
-      <div class="rkda">5 <span style="color:var(--text-ghost)">/</span> 7 <span style="color:var(--text-ghost)">/</span> 9</div>
-      <div class="rtime">25:03</div>
-      <div class="rscore">51</div>
-      <div class="rtag">肉盾</div>
-    </div>
-
-    <div class="row">
-      <span class="markw w"></span>
-      <div class="thumb"><img src="https://cdn.communitydragon.org/latest/champion/Ezreal/square" alt=""></div>
-      <div class="rn">Ezreal<em>昨天 20:31</em></div>
-      <div class="rkda">9 <span style="color:var(--text-ghost)">/</span> 4 <span style="color:var(--text-ghost)">/</span> 11</div>
-      <div class="rtime">21:47</div>
-      <div class="rscore">74</div>
-      <div class="rtag good">尽力局长</div>
-    </div>
-
   </div>
 
-  <div class="summary">
-    <div class="s"><span class="v">3<span style="color:var(--text-ghost)"> / </span>3</span><span class="l">近 6 局胜负</span></div>
-    <div class="s"><span class="v bad">1</span><span class="l">当过蛆王</span></div>
-    <div class="s"><span class="v">7.2</span><span class="l">平均阵亡</span></div>
+  <div class="sumbar">
+    <div class="sumitems" id="sum"></div>
     <div class="wait"><i></i>等你开一局</div>
   </div>
 
   <div class="foot">
-    <span>数据来源：本地客户端接口</span>
+    <span id="foot-l"></span>
     <span class="btn">设置</span>
   </div>
 
 </div>
 </div>
+
+<script>
+const D = {"me":{"name":"我来加油你去送","tag":"68961","level":673,"icon":7038,"xp":655,"xpNeed":3648,"percent":17,"puuid":"ba90185e-6edb-5f1e-b440-10130bcdaf15","rank":null,"reroll":{"points":0,"cost":250,"max":2,"used":0}},"stats":{"games":1,"wins":1,"winRate":100,"kda":[2.0,8.0,41.0],"score":42,"deaths":8.0,"worm":0},"history":[{"champ":"时光守护者","cid":26,"k":2,"d":8,"a":41,"length":1144,"score":42,"tag":"最扛","tone":"","win":1,"when":"10-26 19:26","gameId":9050524432}]};
+
+const $ = id => document.getElementById(id);
+const fmt = s => Math.floor(s / 60) + ':' + String(Math.round(s % 60)).padStart(2, '0');
+const iconUrl = id => 'https://cdn.communitydragon.org/latest/profile-icon/' + id;
+const champUrl = cid => 'https://cdn.communitydragon.org/latest/champion/' + cid + '/square';
+
+/* 图片失败降级成首字——CDN 挂了不能只剩一个空方块 */
+function fallback(img, text){
+  img.addEventListener('error', function(){
+    const box = img.parentElement;
+    box.classList.add('fallback');
+    box.textContent = text;
+  });
+}
+
+const ME = D.me, ST = D.stats;
+const TIER = {
+  IRON: '黑铁', BRONZE: '青铜', SILVER: '白银', GOLD: '黄金',
+  PLATINUM: '铂金', EMERALD: '翡翠', DIAMOND: '钻石',
+  MASTER: '大师', GRANDMASTER: '宗师', CHALLENGER: '王者',
+};
+
+/* ── 身份 ── */
+$('icon').src = iconUrl(ME.icon);
+fallback($('icon'), ME.name.slice(0, 1));
+$('name').innerHTML = ME.name + (ME.tag ? '<em>#' + ME.tag + '</em>' : '');
+
+(function(){
+  const parts = [];
+
+  // 等级（接口直接给 summonerLevel）
+  parts.push('等级 ' + ME.level);
+
+  // 段位：乱斗号通常全空，这时不编造段位
+  if (ME.rank) {
+    parts.push(TIER[ME.rank.tier] || ME.rank.tier, ME.rank.division || '');
+  } else {
+    parts.push('<span class="na">未定级</span>');
+  }
+
+  // 记录局数（本地积累，不是接口）
+  parts.push('已记录 ' + ST.games + ' 局');
+
+  // 重随点：大乱斗专属，0 点时给进度感
+  const rr = ME.reroll || {};
+  if (rr.cost) {
+    const can = Math.floor((rr.points || 0) / rr.cost);
+    parts.push(can > 0
+      ? '<span class="rr">可重随 ' + can + ' 次</span>'
+      : '<span class="na">重随 ' + (rr.points || 0) + '/' + rr.cost + '</span>');
+  }
+
+  $('tags').innerHTML = parts
+    .filter(x => x !== '')
+    .join('<span class="dot"></span>');
+})();
+
+/* ── 三个大数 ── */
+(function(){
+  const kda = ST.kda.map(v => (v % 1 === 0 ? v : v.toFixed(1)));
+  const items = [
+    [ST.winRate + '<span class="s">%</span>', '近 ' + ST.games + ' 局胜率', ''],
+    [kda.join('<span class="s">/</span>'), '场均 K / D / A', ''],
+    [ST.score, '平均评分', ''],
+  ];
+  $('kpis').innerHTML = items.map(([v, l, cls]) =>
+    '<div class="kpi"><div class="v ' + cls + '">' + v + '</div><div class="l">' + l + '</div></div>'
+  ).join('');
+})();
+
+/* ── 最近战报 ── */
+(function(){
+  const H = D.history || [];
+  $('hint').textContent = H.length ? '点任意一行看完整报告' : '';
+
+  if (!H.length) {
+    $('rows').innerHTML = '';
+    $('empty').style.display = '';
+    return;
+  }
+
+  $('rows').innerHTML = H.map(h => {
+    const win = h.win === 1;
+    return '<div class="row' + (h.tag === '蛆' ? ' crime' : '') + '" data-g="' + h.gameId + '">'
+      + '<span class="markw ' + (win ? 'w' : 'l') + '"></span>'
+      + '<div class="thumb"><img src="' + champUrl(h.cid) + '" alt="" '
+        + 'onerror="this.parentElement.classList.add(\'fallback\');'
+        + 'this.parentElement.textContent=\'' + h.champ.slice(0, 1) + '\'"></div>'
+      + '<div class="rn">' + h.champ + '<em>' + h.when + '</em></div>'
+      + '<div class="rkda">' + h.k
+        + '<span class="sep"> / </span>'
+        + (h.d >= 10 ? '<em>' + h.d + '</em>' : h.d)
+        + '<span class="sep"> / </span>' + h.a + '</div>'
+      + '<div class="rtime">' + fmt(h.length) + '</div>'
+      + '<div class="rscore">' + h.score + '</div>'
+      + '<div class="rtag ' + (h.tone || '') + '">' + h.tag + '</div>'
+      + '</div>';
+  }).join('');
+})();
+
+/* ── 汇总 ── */
+(function(){
+  const items = [
+    [ST.wins + '<span class="sep"> / </span>' + (ST.games - ST.wins),
+     '近 ' + ST.games + ' 局胜负', ''],
+    [ST.worm, '当过蛆王', ST.worm ? 'bad' : ''],
+    [ST.deaths, '场均阵亡', ''],
+  ];
+  $('sum').innerHTML = items.map(([v, l, cls]) =>
+    '<div class="s"><span class="v ' + cls + '">' + v + '</span><span class="l">' + l + '</span></div>'
+  ).join('');
+})();
+
+/* ── 点行跳转：嵌入时交给外壳，单开时直接跳文件 ── */
+document.querySelectorAll('.row').forEach(function (row) {
+  row.addEventListener('click', function () {
+    if (window.parent !== window) {
+      parent.postMessage({ __proto: 1, nav: 'report' }, '*');
+    } else {
+      location.href = 'report.html';
+    }
+  });
+});
+
+/* ── 页脚 ── */
+$('foot-l').textContent = '数据全部来自本地客户端 · 不上传任何内容';
+</script>
+<script>
+/* 原型外壳桥：只在被 iframe 嵌入时生效，单开这三个页面不受影响 */
+(function () {
+  if (window.parent === window) return;
+  var send = function (msg) { msg.__proto = 1; parent.postMessage(msg, '*'); };
+  var push = function () { send({ height: document.documentElement.scrollHeight }); };
+  send({ height: document.documentElement.scrollHeight });
+  window.addEventListener('load', push);
+  if (window.ResizeObserver) new ResizeObserver(push).observe(document.body);
+})();
+</script>
 </body>
 </html>

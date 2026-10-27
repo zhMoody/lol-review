@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<title>LoL 战报 · v2 中性极简 / 对阵阵容</title>
+<title>LoL 战报 · 海克斯大乱斗</title>
 <style>
 :root{
   --bg:#0A0A0B;
@@ -12,10 +12,12 @@
   --text-hi:#F2F2F3;
   --text-mid:#9E9EA4;
   --text-low:#6A6A70;
+  --ghost:#3A3A3E;
   --danger:#D9534F;
-  --silver:#B9C0C8;
+  --win:#D9AE5F;
+  --rail:#E9E9E6;
+  --rail-2:#8A8F98;
   --gold:#D9AE5F;
-  --prism:#B08CFF;
   --e:cubic-bezier(.22,1,.36,1);
   --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,monospace;
   --sans:-apple-system,"PingFang SC","HarmonyOS Sans SC","Microsoft YaHei",sans-serif;
@@ -23,117 +25,179 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#060607;font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--text-mid)}
 .stage{display:flex;justify-content:center;padding:28px}
-.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
+.app{width:1280px;background:var(--bg);border-radius:12px;overflow:hidden;
+  box-shadow:0 40px 120px -50px #000,0 0 0 1px #17171A}
 
-/* 顶栏 */
+/* ── 顶栏 ── */
 .topbar{height:56px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--line-soft)}
 .brand{display:flex;align-items:center;gap:10px}
 .mark{width:9px;height:9px;background:var(--text-hi)}
 .brand b{font-size:13px;font-weight:500;color:var(--text-hi);letter-spacing:.3px}
 .topbar .mid{margin-left:auto;margin-right:auto;font-size:12px;color:var(--text-low);letter-spacing:.5px}
-.status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-low)}
-.status i{width:5px;height:5px;border-radius:50%;background:var(--text-hi);animation:b 2.4s ease-in-out infinite}
-@keyframes b{0%,100%{opacity:.25}50%{opacity:1}}
+.ghost-btn{font-size:11px;color:var(--text-low);background:transparent;border:1px solid var(--line);
+  border-radius:4px;padding:3px 9px;cursor:pointer;font-family:inherit;transition:.15s;letter-spacing:.5px}
+.ghost-btn:hover{color:var(--text-mid);border-color:var(--ghost)}
+.ghost-btn.on{color:#0A0A0B;background:var(--text-hi);border-color:var(--text-hi)}
+.status{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-low);margin-left:16px}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--win)}
 
-/* 头部 */
-.head{padding:40px 48px 28px;display:flex;align-items:flex-end;justify-content:space-between}
-.result{font-size:58px;font-weight:700;letter-spacing:10px;line-height:.9;color:var(--text-hi)}
-.result.lose{color:#C8C8CC}
+/* ── 头部 ── */
+.head{padding:38px 48px 24px;display:flex;align-items:flex-end;justify-content:space-between}
+.result{font-size:58px;font-weight:700;letter-spacing:10px;line-height:.9;color:var(--win)}
+.result.lose{color:#C9D3E0}
 .sub{margin-top:14px;font-size:12px;color:var(--text-low);letter-spacing:1.2px}
+.sub b{color:var(--text-mid);font-weight:500;font-family:var(--mono)}
 .kpis{display:flex;gap:44px;padding-bottom:6px}
 .kpi{text-align:right}
 .kpi .v{font-family:var(--mono);font-size:26px;color:var(--text-hi);line-height:1}
 .kpi .v .s{color:var(--text-low);font-size:16px;margin:0 2px}
 .kpi .l{margin-top:8px;font-size:10px;color:var(--text-low);letter-spacing:1px}
+.kpi .v.pos{color:var(--win)}
 .kpi .v.neg{color:var(--danger)}
 
-/* 阵容 */
+/* ── 阵容 ── */
 .board{padding:0 48px}
 .teamlabel{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:2px;color:var(--text-low)}
 .teamlabel .ln{flex:1;height:1px;background:var(--line-soft)}
-.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 0 18px}
-.slot{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:6px 0;position:relative}
-.slot .idx{font-family:var(--mono);font-size:9px;color:#3A3A3E;margin-bottom:7px;letter-spacing:1px}
-.ava{position:relative;width:88px;height:88px;border-radius:10px;overflow:hidden;background:#1A1A1D;outline:1px solid #2A2A2E;transition:outline-color .18s var(--e),transform .18s var(--e)}
+.teamlabel .n{font-family:var(--mono);letter-spacing:.5px;color:var(--ghost)}
+.teamlabel .lg{display:flex;align-items:center;gap:5px;font-size:9px;letter-spacing:.8px;color:var(--text-low)}
+.teamlabel .lg i{width:11px;height:3px;border-radius:2px;display:block}
+.teamlabel .lg i:not(:first-child){margin-left:9px}
+.slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 0 16px}
+.slot{display:flex;flex-direction:column;align-items:center;cursor:pointer;padding:4px 0 0;position:relative}
+.slot .top{width:80px;margin:0 auto 7px;display:flex;justify-content:space-between;align-items:baseline}
+.slot .idx{font-family:var(--mono);font-size:9px;color:var(--ghost);letter-spacing:1px}
+.slot .sc{font-family:var(--mono);font-size:10.5px;color:var(--text-mid);letter-spacing:.5px}
+.ava{position:relative;width:80px;height:80px;border-radius:9px;overflow:hidden;background:#1A1A1D;
+  outline:1px solid #2A2A2E;transition:outline-color .18s var(--e),transform .18s var(--e)}
 .ava img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.92)}
-.slot:hover .ava{transform:translateY(-3px);outline-color:#55555C}
-.slot.crime .ava{outline:1.5px solid var(--danger)}
+.slot:hover .avawrap{transform:translateY(-3px)}
+.slot:hover .ava{outline-color:#55555C}
 .slot.sel .nm{color:#FFF}
-.slot.sel::after{content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:18px;height:2px;background:var(--text-hi)}
-.pill{position:absolute;right:-4px;bottom:-4px;min-width:24px;height:17px;padding:0 5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;font-family:var(--mono);font-size:10px;color:var(--text-hi);display:flex;align-items:center;justify-content:center;line-height:1}
-.nm{margin-top:11px;font-size:12.5px;color:var(--text-hi);letter-spacing:.2px}
-.kd{margin-top:5px;font-family:var(--mono);font-size:10.5px;color:var(--text-mid);letter-spacing:.4px}
-.kd .d{color:var(--text-mid)}
+.slot.sel .idx{color:var(--text-mid)}
+.slot.sel .ava{outline-color:#8A8F98}
+.slot.sel .rails{box-shadow:0 6px 0 -5px var(--text-hi)}
+.slot .sc.na{color:var(--danger)}
+.slot .sc.mvp{color:var(--win)}
+.nm{margin-top:10px;font-size:12px;color:var(--text-hi);letter-spacing:.2px;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center}
+.kd{margin-top:4px;font-family:var(--mono);font-size:10.5px;color:var(--text-mid);letter-spacing:.4px}
 .kd .d.hot{color:var(--danger)}
+.rails{margin-top:8px;width:84px;display:flex;flex-direction:column;gap:3px}
+.rails i{display:block;height:3px;border-radius:2px;background:rgba(255,255,255,.075);position:relative;overflow:hidden}
+.rails i::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);border-radius:2px;background:var(--c,var(--rail))}
 
-/* 时间轴 */
-.axis{position:relative;height:78px;margin:6px 0}
-.axis .line{position:absolute;left:0;right:0;top:26px;height:1px;background:var(--line)}
-.tick{position:absolute;top:26px;width:1px;height:7px;background:#3A3A3E}
-.tick.neg{background:var(--danger);height:11px;top:24px}
-.ev{position:absolute;top:38px;font-size:9.5px;color:var(--text-low);letter-spacing:.3px;transform:translateX(-50%);white-space:nowrap}
-.ev.neg{color:var(--danger);opacity:.85}
-.axis .center{position:absolute;left:50%;top:26px;transform:translate(-50%,-50%);background:var(--bg);padding:0 10px;font-family:var(--mono);font-size:10px;color:var(--text-low)}
+/* ── 时间轴 ── */
+.axis{position:relative;height:96px;margin:2px 0}
+.axis .line{position:absolute;left:0;right:0;top:46px;height:1px;background:var(--line)}
+.axis .tick{position:absolute;top:46px;width:1px;height:6px;background:var(--ghost)}
+.ep{position:absolute;width:2px;height:15px;bottom:50px;background:var(--text-low);border-radius:1px}
+.ep.mine{background:var(--danger)}
+.ep.foe{background:#5A6068;bottom:auto;top:50px}
+.ep .lb{position:absolute;left:50%;bottom:17px;transform:translateX(-50%);font-family:var(--mono);
+  font-size:8.5px;color:var(--text-low);white-space:nowrap}
+.ep.foe .lb{bottom:auto;top:17px;color:#6E757E}
+.ep.mine .lb{color:var(--danger);opacity:.9}
+.ob{position:absolute;top:53px;transform:translateX(-50%);width:9px;height:9px;border:1px solid var(--text-low)}
+.ob.inhib{transform:translateX(-50%) rotate(45deg);border-color:var(--win)}
+.ob.ace{border-radius:50%;border-color:var(--text-mid);background:rgba(255,255,255,.12)}
 
-/* 结论 */
-.verdict{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);margin-top:8px}
-.vd{padding:26px 32px;border-right:1px solid var(--line-soft)}
-.vd:last-child{border-right:0}
-.vd:first-child{padding-left:48px}
-.vd .k{font-size:10px;letter-spacing:2px;color:var(--text-low)}
-.vd .n{margin-top:10px;font-size:21px;font-weight:500;color:var(--text-hi);letter-spacing:.4px}
-.vd .r{margin-top:8px;font-size:12px;line-height:1.55;color:var(--text-mid)}
-.vd.bad .n{color:var(--danger)}
 
-/* 罪状 */
-.indict{display:grid;grid-template-columns:1fr 268px;gap:40px;padding:24px 48px 4px;border-bottom:1px solid var(--line-soft)}
-.indict .hd{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
-.indict .hd h3{font-size:11px;letter-spacing:2.5px;color:var(--text-low);font-weight:500}
-.indict .hd .who{margin-left:auto;font-size:11px;color:var(--danger);letter-spacing:.4px}
-.charge{display:flex;gap:14px;align-items:baseline;padding:7px 0;border-top:1px solid #17171A}
-.charge:first-of-type{border-top:0}
-.charge .t{font-family:var(--mono);font-size:10.5px;color:var(--text-ghost);width:40px;flex:none}
-.charge .p{font-size:11px;color:var(--text-low);width:72px;flex:none;letter-spacing:.4px}
-.charge .x{font-size:12px;color:var(--text-mid);line-height:1.5}
-.charge .x b{font-family:var(--mono);font-weight:400;color:var(--danger)}
-.dmap{align-self:center}
-.dmap .cap{display:flex;justify-content:space-between;font-size:9px;letter-spacing:1.2px;color:var(--text-ghost);margin-top:2px}
+/* ── 结论：双方各一组 ── */
+.verdicts{padding:0 48px;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+  margin-top:10px}
+.vhead{padding:18px 0 0;font-size:9.5px;letter-spacing:1.8px;color:var(--text-low);
+  display:flex;align-items:baseline;justify-content:space-between}
+.vhead i{font-style:normal;color:var(--ghost);letter-spacing:.6px}
+.vgroup{padding:14px 0 20px}
+.vgroup + .vgroup{border-top:1px solid #16161A}
+.vlabel{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:2.2px;color:var(--text-low)}
+.vlabel .side{color:var(--text-mid);min-width:24px}
+.vlabel .ln{flex:1;height:1px;background:var(--line-soft)}
+.vlabel .sum{font-family:var(--mono);letter-spacing:.3px;color:var(--ghost)}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);margin-top:14px}
+.vd{padding-right:28px}
+.vd + .vd{padding-left:28px;border-left:1px solid #17171A}
+.vd:last-child{padding-right:0}
+.vd .t{font-size:10px;letter-spacing:2.4px;color:var(--text-low)}
+.vd .t i{font-style:normal;font-size:9.5px;letter-spacing:.4px;color:var(--ghost);margin-left:7px}
+.vd .n{margin-top:13px;font-size:20px;color:var(--text-hi);font-weight:500;letter-spacing:.5px}
+.vd .n em{font-style:normal;font-size:11.5px;color:var(--text-low);margin-left:8px;letter-spacing:0}
+.vd .why{margin-top:10px;font-size:11.5px;line-height:1.75;color:var(--text-mid)}
+.vd .why b{color:var(--text-hi);font-weight:500;font-family:var(--mono)}
+.vd.worm .n{color:var(--danger)}
+.vd.worm .t{color:#C8716A}
 
-/* 美颜开关 */
-.beauty{display:flex;align-items:center;gap:8px;font-size:10.5px;letter-spacing:.6px;color:var(--text-low);cursor:pointer;user-select:none}
-.sw{width:26px;height:14px;border-radius:99px;background:#232326;position:relative;transition:background .18s var(--e)}
-.sw i{position:absolute;top:2px;left:2px;width:10px;height:10px;border-radius:50%;background:#6A6A70;transition:all .18s var(--e)}
-.beauty.on .sw{background:rgba(217,174,95,.28)}
-.beauty.on .sw i{left:14px;background:var(--gold-400,#D9AE5F)}
-.beauty.on{color:#D9AE5F}
+/* ── 蛆 · 圆形印章 ── */
+.avawrap{position:relative;width:80px;height:80px;transition:transform .18s var(--e)}
+.stamp{position:absolute;right:-13px;bottom:-13px;width:48px;height:48px;border-radius:50%;
+  border:1.3px solid rgba(217,83,79,.95);display:grid;place-items:center;
+  font-size:16px;font-weight:700;color:#E2685F;line-height:48px;letter-spacing:0;
+  background:rgba(8,8,9,.62);box-shadow:inset 0 0 0 2px rgba(217,83,79,.26);
+  transform:rotate(-13deg) translateY(2px);z-index:3;pointer-events:none;text-align:center}
 
-/* 详情 */
-.insp{display:grid;grid-template-columns:232px 1fr 200px;gap:36px;padding:26px 48px 30px;align-items:center}
-.who{display:flex;align-items:center;gap:14px}
-.who .ava{width:56px;height:56px;border-radius:8px;outline:1px solid var(--line)}
-.who .t{font-size:14px;color:var(--text-hi);font-weight:500}
-.who .s{margin-top:5px;font-size:10px;letter-spacing:1.2px;color:var(--text-low)}
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
-.st{text-align:left}
-.st .v{font-family:var(--mono);font-size:17px;color:var(--text-hi)}
-.st .l{margin-top:7px;font-size:9.5px;letter-spacing:.8px;color:var(--text-low)}
-.st .bar{margin-top:8px;height:2px;background:#26262A}
-.st .bar i{display:block;height:100%;background:#6E6E74;width:var(--w);transition:width .6s var(--e)}
-.st.hot .bar i{background:var(--danger)}
-.augs{display:flex;gap:6px;justify-content:flex-end}
-.aug{width:26px;height:26px;border:1px solid;border-radius:5px;display:block;background:#1A1A1D;object-fit:cover}
-.aug.s{border-color:rgba(185,192,200,.45)}
-.aug.g{border-color:rgba(217,174,95,.6)}
-.aug.p{border-color:rgba(176,140,255,.7)}
-.aug.empty{background:transparent;border-style:dashed;border-color:#2A2A2E}
-.augnames{margin-top:9px;font-size:9.5px;line-height:1.55;color:var(--text-low);text-align:right;letter-spacing:.2px}
-.auglabel{font-size:9.5px;letter-spacing:1px;color:var(--text-low);text-align:right;margin-bottom:9px}
+/* ── 崩盘记录 ── */
+.sect{border-bottom:1px solid var(--line-soft);padding:26px 48px 26px;display:grid;
+  grid-template-columns:1fr 330px;gap:44px}
+.sect h3{font-size:11px;letter-spacing:2.2px;color:var(--text-low);font-weight:400}
+.sect h3 .c{color:var(--text-hi);font-family:var(--mono);margin-left:7px}
+.ilist{margin-top:14px}
+.ir{display:grid;grid-template-columns:52px 1fr 104px;gap:14px;align-items:baseline;height:27px;
+  border-bottom:1px solid #141416;font-size:11.5px}
+.ir:last-child{border-bottom:none}
+.ir .tm{font-family:var(--mono);font-size:10.5px;color:var(--text-low)}
+.ir .who{color:var(--text-mid);display:flex;align-items:center;gap:8px;min-width:0}
+.ir .who b{color:var(--text-hi);font-weight:500;white-space:nowrap}
+.ir .who>span:not(.sd){color:var(--text-low);font-size:10.5px;white-space:nowrap}
+.ir .sd{font-size:9px;letter-spacing:.5px;padding:1px 4px;border:1px solid var(--line);border-radius:2px;color:var(--text-low)}
+.ir .cost{font-family:var(--mono);font-size:10px;color:var(--text-low);text-align:right}
+.ir.crime .who b{color:var(--danger)}
+.ir.crime .cost{color:#9A6360}
+.dist{position:relative;height:224px;margin-top:12px}
+.dist .base{position:absolute;left:0;right:0;top:112px;height:1px;background:var(--line)}
+.dist .m{position:absolute;width:2px;height:var(--h);bottom:113px;background:var(--danger);opacity:.85}
+.dist .m.foe{bottom:auto;top:113px;background:#6E757E;opacity:.9}
+.dist .ax{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:9px;color:var(--ghost)}
+.dist .cap{position:absolute;font-size:9px;letter-spacing:1px;color:var(--text-low)}
+.dist .cap.t{top:0}
+.dist .cap.b{bottom:18px}
 
-.topbar .beauty{margin-right:20px}
-.foot{display:flex;justify-content:space-between;align-items:center;padding:0 48px 22px;font-size:10px;color:#3E3E43}
-.foot .btn{font-size:11px;color:var(--text-mid);border:1px solid var(--line);border-radius:5px;padding:5px 12px}
+/* ── 详情 ── */
+.detail{padding:26px 48px 28px}
+.dhead{display:flex;align-items:center;gap:16px}
+.dhead .ava{width:52px;height:52px;border-radius:8px}
+.dhead .who b{font-size:16px;color:var(--text-hi);font-weight:500}
+.dhead .who em{font-style:normal;font-size:11px;color:var(--text-low);margin-left:9px}
+.dhead .kda{margin-left:auto;font-family:var(--mono);font-size:15px;color:var(--text-hi);letter-spacing:1px}
+.dhead .kda small{color:var(--text-low);font-size:11px;margin-left:10px;letter-spacing:0}
+.dbody{display:grid;grid-template-columns:1.3fr 1fr;gap:44px;margin-top:22px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px 34px}
+.st .top{display:flex;justify-content:space-between;align-items:baseline}
+.st .k{font-size:10.5px;color:var(--text-low);letter-spacing:.6px}
+.st .v{font-family:var(--mono);font-size:13px;color:var(--text-hi)}
+.st .v small{color:var(--text-low);font-size:9.5px;margin-left:4px}
+.st .bar{margin-top:6px;height:3px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
+.st .bar i{display:block;height:100%;width:var(--w);border-radius:2px;background:var(--c,var(--rail))}
+.right{display:flex;flex-direction:column;gap:17px}
+.lbl{font-size:9.5px;letter-spacing:1.6px;color:var(--text-low)}
+.augs{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.aug{display:flex;align-items:center;gap:7px;padding:5px 9px 5px 5px;border:1px solid var(--line);
+  border-radius:5px;background:#0E0E10}
+.aug img{width:22px;height:22px;border-radius:3px;display:block}
+.aug span{font-size:11px;color:var(--text-mid);white-space:nowrap}
+.aug.p{border-color:rgba(176,140,255,.45)}
+.aug.g{border-color:rgba(217,174,95,.42)}
+.aug.s{border-color:rgba(185,192,200,.28)}
+.items{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.items img{width:28px;height:28px;border-radius:4px;display:block;background:#141416}
+.items .emp{width:28px;height:28px;border-radius:4px;background:#101012;box-shadow:inset 0 0 0 1px #1B1B1E}
+.spells{display:flex;gap:18px;margin-top:9px;font-size:11px;color:var(--text-mid)}
+.spells b{font-weight:400;color:var(--text-low);margin-right:6px}
 
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.foot{display:flex;justify-content:space-between;align-items:center;padding:0 48px 18px;
+  font-size:10px;color:#3E3E43;letter-spacing:.6px}
+.foot b{color:#4A4A50;font-weight:400;font-family:var(--mono)}
 </style>
 </head>
 <body>
@@ -142,241 +206,359 @@ html,body{background:#060607;font-family:var(--sans);-webkit-font-smoothing:anti
 
   <div class="topbar">
     <div class="brand"><span class="mark"></span><b>战报</b></div>
-    <div class="mid">第 14 局 · 已记录</div>
-    <div class="beauty" id="beauty"><span class="sw"><i></i></span>美颜</div>
-    <div class="status"><i></i>空闲</div>
+    <div class="mid" id="mid"></div>
+    <button class="ghost-btn" id="pretty">美颜</button>
+    <div class="status"><i></i><span id="res">我方胜利</span></div>
   </div>
 
   <div class="head">
     <div>
-      <div class="result lose">失败</div>
-      <div class="sub">28 : 41 · 海克斯大乱斗 · 16.21</div>
+      <div class="result" id="result">胜利</div>
+      <div class="sub" id="sub"></div>
     </div>
-    <div class="kpis">
-      <div class="kpi"><div class="v">42<span class="s">/</span>28<span class="s">/</span>61</div><div class="l">全队 K / D / A</div></div>
-      <div class="kpi"><div class="v neg">−4.2<span class="s">k</span></div><div class="l">金币差</div></div>
-      <div class="kpi"><div class="v">2<span class="s">:</span>3</div><div class="l">防御塔</div></div>
-    </div>
+    <div class="kpis" id="kpis"></div>
   </div>
 
   <div class="board">
-
-    <div class="teamlabel"><span>敌方 · 蓝方</span><span class="ln"></span></div>
-    <div class="slots" id="enemy">
-      <div class="slot" data-i="5"><div class="idx">01</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Zed/square" alt=""><span class="pill">76</span></div>
-        <div class="nm">Zed</div><div class="kd">14 <span class="d">/</span> 3 <span class="d">/</span> 9</div></div>
-      <div class="slot" data-i="6"><div class="idx">02</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Vi/square" alt=""><span class="pill">69</span></div>
-        <div class="nm">Vi</div><div class="kd">9 <span class="d">/</span> 4 <span class="d">/</span> 15</div></div>
-      <div class="slot" data-i="7"><div class="idx">03</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/KaiSa/square" alt=""><span class="pill">65</span></div>
-        <div class="nm">Kai'Sa</div><div class="kd">13 <span class="d">/</span> 5 <span class="d">/</span> 6</div></div>
-      <div class="slot" data-i="8"><div class="idx">04</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Darius/square" alt=""><span class="pill">61</span></div>
-        <div class="nm">Darius</div><div class="kd">10 <span class="d">/</span> 5 <span class="d">/</span> 8</div></div>
-      <div class="slot" data-i="9"><div class="idx">05</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Nautilus/square" alt=""><span class="pill">54</span></div>
-        <div class="nm">Nautilus</div><div class="kd">2 <span class="d">/</span> 8 <span class="d">/</span> 21</div></div>
-    </div>
-
-    <div class="axis">
+    <div class="teamlabel"><span>敌方</span><span class="n" id="foe-line"></span><span class="ln"></span>
+      <span class="lg"><i style="background:var(--rail)"></i>输出<i style="background:var(--rail-2)"></i>团队<i style="background:var(--danger)"></i>风险</span></div>
+    <div class="slots" id="foe-slots"></div>
+    <div class="axis" id="axis">
       <div class="line"></div>
-      <div class="tick" style="left:4.2%"></div><div class="ev" style="left:4.2%">首塔</div>
-      <div class="tick neg" style="left:15.4%"></div><div class="ev neg" style="left:15.4%">经济反超</div>
-      <div class="tick neg" style="left:39.2%"></div><div class="ev neg" style="left:39.2%">Yasuo 阵亡 → 丢塔</div>
-      <div class="tick neg" style="left:64.1%"></div><div class="ev neg" style="left:64.1%">二塔丢失</div>
-      <div class="tick neg" style="left:88.5%"></div><div class="ev neg" style="left:88.5%">团灭</div>
-      <div class="center">28:41</div>
-    </div>
 
-    <div class="slots" id="ally">
-      <div class="slot" data-i="0"><div class="idx">01</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Ahri/square" alt=""><span class="pill">73</span></div>
-        <div class="nm">Ahri</div><div class="kd">12 <span class="d">/</span> 4 <span class="d">/</span> 7</div></div>
-      <div class="slot" data-i="1"><div class="idx">02</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/LeeSin/square" alt=""><span class="pill">59</span></div>
-        <div class="nm">Lee Sin</div><div class="kd">5 <span class="d">/</span> <span class="d hot">9</span> <span class="d">/</span> 13</div></div>
-      <div class="slot" data-i="2"><div class="idx">03</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Jinx/square" alt=""><span class="pill">52</span></div>
-        <div class="nm">Jinx</div><div class="kd">6 <span class="d">/</span> 7 <span class="d">/</span> 5</div></div>
-      <div class="slot" data-i="3"><div class="idx">04</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Lulu/square" alt=""><span class="pill">34</span></div>
-        <div class="nm">Lulu</div><div class="kd">1 <span class="d">/</span> 6 <span class="d">/</span> 16</div></div>
-      <div class="slot crime sel" data-i="4"><div class="idx">05</div>
-        <div class="ava"><img src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""><span class="pill">28</span></div>
-        <div class="nm">Yasuo</div><div class="kd">2 <span class="d">/</span> <span class="d hot">11</span> <span class="d">/</span> 4</div></div>
     </div>
-    <div class="teamlabel"><span class="ln"></span><span>我方 · 红方</span></div>
-
+    <div class="slots" id="mine-slots"></div>
+    <div class="teamlabel"><span class="ln"></span><span class="n" id="mine-line"></span><span>我方</span></div>
   </div>
 
-  <div class="verdict">
-    <div class="vd">
-      <div class="k">最 　C</div>
-      <div class="n">Ahri</div>
-      <div class="r">伤害占比 34%，全场第一<br>4 次阵亡，全场最少</div>
-    </div>
-    <div class="vd bad">
-      <div class="k">在 犯 罪</div>
-      <div class="n">Yasuo</div>
-      <div class="r">11 次阵亡，其中 4 次发生在<br>团战开打前的 8 秒内</div>
-    </div>
-    <div class="vd">
-      <div class="k">在 划 水</div>
-      <div class="n">Lulu</div>
-      <div class="r">伤害占比 8%，全场最低<br>但治疗量 21.4k，全队第一</div>
-    </div>
-  </div>
+  <div class="verdicts" id="verdicts"></div>
 
-  <div class="indict">
+  <div class="sect">
     <div>
-      <div class="hd"><h3>罪 状</h3><span class="who">Yasuo · 共 4 条可查证</span></div>
-      <div class="charge">
-        <span class="t">14:22</span><span class="p">中路</span>
-        <span class="x">团战开打前 <b>8 秒</b>阵亡 → 45 秒后丢二塔</span>
-      </div>
-      <div class="charge">
-        <span class="t">22:15</span><span class="p">敌方塔下</span>
-        <span class="x">吸收伤害仅为全队均值的 <b>31%</b>，秒躺</span>
-      </div>
-      <div class="charge">
-        <span class="t">24:40</span><span class="p">中路</span>
-        <span class="x">死时携带 <b>2,340</b> 金币未花，浪费唯一购物窗口</span>
-      </div>
-      <div class="charge">
-        <span class="t">26:02</span><span class="p">我方高地</span>
-        <span class="x">我方 4 人存活时无意义阵亡，直接掉高地</span>
-      </div>
-    </div>
-    <div class="dmap">
-      <svg viewBox="0 0 268 58" width="268" height="58" role="img" xmlns="http://www.w3.org/2000/svg">
-        <title>阵亡位置分布</title>
-        <desc>沿嚎哭深渊单线展开的阵亡位置，红色实心为白给阵亡。</desc>
-        <line x1="8" y1="26" x2="260" y2="26" stroke="#232326" stroke-width="1"/>
-        <line x1="8" y1="18" x2="8" y2="34" stroke="#2A2A2E" stroke-width="1"/>
-        <line x1="260" y1="18" x2="260" y2="34" stroke="#2A2A2E" stroke-width="1"/>
-        <circle cx="46" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
-        <circle cx="88" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
-        <circle cx="122" cy="26" r="3.6" fill="#D9534F"/>
-        <circle cx="150" cy="26" r="3.6" fill="#D9534F"/>
-        <circle cx="178" cy="26" r="3" fill="none" stroke="#6A6A70" stroke-width="1.2"/>
-        <circle cx="212" cy="26" r="3.6" fill="#D9534F"/>
-        <circle cx="236" cy="26" r="3.6" fill="#D9534F"/>
-        <text x="8" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" letter-spacing="1">我方</text>
-        <text x="134" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" text-anchor="middle" letter-spacing="1">中路</text>
-        <text x="260" y="48" font-family="system-ui,sans-serif" font-size="8.5" fill="#3E3E43" text-anchor="end" letter-spacing="1">敌方</text>
-      </svg>
-      <div class="cap"><span>● 白给</span><span>○ 正常</span></div>
-    </div>
-  </div>
-
-  <div class="insp">
-    <div class="who">
-      <div class="ava"><img id="i-ava" src="https://cdn.communitydragon.org/latest/champion/Yasuo/square" alt=""></div>
-      <div>
-        <div class="t" id="i-name">Yasuo</div>
-        <div class="s" id="i-tag">阵亡 11 · 评分 28</div>
-      </div>
-    </div>
-    <div class="stats" id="i-stats">
-      <div class="st"><div class="v" data-k="dmg">11%</div><div class="l">伤害占比</div><div class="bar"><i style="--w:11%"></i></div></div>
-      <div class="st"><div class="v" data-k="taken">31.5k</div><div class="l">承受伤害</div><div class="bar"><i style="--w:88%"></i></div></div>
-      <div class="st"><div class="v" data-k="heal">0.9k</div><div class="l">治疗量</div><div class="bar"><i style="--w:8%"></i></div></div>
-      <div class="st"><div class="v" data-k="cc">12s</div><div class="l">控制时长</div><div class="bar"><i style="--w:18%"></i></div></div>
-      <div class="st"><div class="v" data-k="gold">12.4k</div><div class="l">金币</div><div class="bar"><i style="--w:62%"></i></div></div>
-      <div class="st hot"><div class="v" data-k="death">11</div><div class="l">阵亡</div><div class="bar"><i style="--w:100%"></i></div></div>
+      <h3><span id="indict-title">崩盘记录</span><span class="c" id="ep-count"></span></h3>
+      <div class="ilist" id="ilist"></div>
     </div>
     <div>
-      <div class="auglabel">强化符文</div>
-      <div class="augs" id="i-augs">
-        <img class="aug g" src="https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png" alt="">
-        <img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png" alt="">
-        <img class="aug s" src="https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png" alt="">
-        <img class="aug p" src="https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png" alt="">
+      <h3>崩盘分布</h3>
+      <div class="dist" id="dist">
+        <div class="base"></div>
+        <div class="cap t">我方发起</div>
+        <div class="cap b">敌方发起</div>
+        <div class="ax" id="dist-ax"></div>
       </div>
-      <div class="augnames" id="i-augnames">尖端发明家 · 大力 · 灵巧 · 泰坦的坚决</div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div class="dhead">
+      <div class="ava"><img id="d-img" alt=""></div>
+      <div class="who"><b id="d-name"></b><em id="d-champ"></em></div>
+      <div class="kda"><span id="d-kda"></span><small id="d-extra"></small></div>
+    </div>
+    <div class="dbody">
+      <div class="stats" id="d-stats"></div>
+      <div class="right">
+        <div>
+          <div class="lbl">强化符文</div>
+          <div class="augs" id="d-augs"></div>
+        </div>
+        <div>
+          <div class="lbl">出装 · <span id="d-gold"></span></div>
+          <div class="items" id="d-items"></div>
+        </div>
+        <div>
+          <div class="lbl">召唤师技能</div>
+          <div class="spells" id="d-spells"></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="foot">
-    <span>数据来源：本地客户端接口 · 16:22 生成</span>
-    <span class="btn">导出</span>
+    <div id="foot-l"></div>
+    <div id="foot-r"></div>
   </div>
 
 </div>
 </div>
 
 <script>
-const AUG = {
- 1001:['泰坦的坚决','p','https://game.gtimg.cn/images/lol/act/img/rune/iamthejuggernaut_small.png'],
- 1004:['回归基本功','p','https://game.gtimg.cn/images/lol/act/img/rune/backtobasics_small.png'],
- 1006:['利刃华尔兹','p','https://game.gtimg.cn/images/lol/act/img/rune/bladewaltz_small.png'],
- 1002:['尖端发明家','g','https://game.gtimg.cn/images/lol/act/img/rune/apexinventor_small.png'],
- 1005:['喂呜喂呜','g','https://game.gtimg.cn/images/lol/act/img/rune/weewooweewoo_small.png'],
- 1013:['星界躯体','g','https://game.gtimg.cn/images/lol/act/img/rune/celestialbody_small.png'],
- 1007:['大力','s','https://game.gtimg.cn/images/lol/act/img/rune/bluntforce_small.png'],
- 1022:['灵巧','s','https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png'],
- 1025:['俯冲轰炸','s','https://game.gtimg.cn/images/lol/act/img/rune/divebomber_small.png']
-};
-const P = [
- {n:'Ahri',   d:['34%','18.2k','2.1k','28s','15.1k','4'],  w:[34,52,20,42,76,36], t:'阵亡 4 · 评分 73', a:[1001,1002,1007,1022]},
- {n:'Lee Sin',d:['14%','24.3k','3.4k','33s','12.8k','9'],  w:[14,70,32,50,64,82], t:'阵亡 9 · 评分 59', a:[1002,1007,1022,1025]},
- {n:'Jinx',   d:['19%','14.8k','0.4k','6s','13.9k','7'],   w:[19,42,4,9,69,64],  t:'阵亡 7 · 评分 52', a:[1006,1005,1007,1022]},
- {n:'Lulu',   d:['8%','16.1k','21.4k','44s','10.2k','6'],  w:[8,46,100,67,51,55], t:'阵亡 6 · 评分 34', a:[1013,1005,1022,1025]},
- {n:'Yasuo',  d:['11%','31.5k','0.9k','12s','12.4k','11'], w:[11,88,8,18,62,100], t:'阵亡 11 · 评分 28', a:[1002,1007,1022,1001]},
- {n:'Zed',    d:['29%','15.6k','0.6k','9s','16.2k','3'],   w:[29,44,6,14,81,27], t:'阵亡 3 · 评分 76', a:[1001,1006,1004,1002]},
- {n:'Vi',     d:['17%','27.8k','1.2k','51s','14.5k','4'],  w:[17,79,11,78,72,36],t:'阵亡 4 · 评分 69', a:[1013,1002,1007,1025]},
- {n:"Kai'Sa", d:['26%','13.9k','0.5k','7s','15.8k','5'],   w:[26,39,5,11,79,45], t:'阵亡 5 · 评分 65', a:[1006,1005,1002,1022]},
- {n:'Darius', d:['21%','29.1k','4.8k','22s','14.2k','5'],  w:[21,83,45,34,71,45],t:'阵亡 5 · 评分 61', a:[1001,1013,1007,1025]},
- {n:'Nautilus',d:['9%','33.6k','2.2k','68s','11.9k','8'],  w:[9,95,21,100,60,73],t:'阵亡 8 · 评分 54', a:[1013,1007,1022,1025]}
-];
-const keys=['dmg','taken','heal','cc','gold','death'];
-const cdn=n=>'https://cdn.communitydragon.org/latest/champion/'+n.replace(/[^A-Za-z']/g,'')+'/square';
-function renderAugs(p){
-  document.getElementById('i-augs').innerHTML=p.a.map(id=>{
-    const a=AUG[id]; return a?`<img class="aug ${a[1]}" src="${a[2]}" alt="${a[0]}" title="${a[0]}">`:'';
-  }).join('');
-  document.getElementById('i-augnames').textContent=p.a.map(id=>(AUG[id]||['?'])[0]).join(' · ');
-}
-const slots=[...document.querySelectorAll('.slot')];
-slots.forEach(s=>s.addEventListener('click',()=>{
-  slots.forEach(x=>x.classList.remove('sel'));
-  s.classList.add('sel');
-  const p=P[+s.dataset.i];
-  document.getElementById('i-ava').src=cdn(p.n);
-  document.getElementById('i-name').textContent=p.n;
-  document.getElementById('i-tag').textContent=p.t;
-  document.querySelectorAll('#i-stats .st').forEach((st,i)=>{
-    st.querySelector('.v').textContent=p.d[i];
-    st.querySelector('.bar i').style.setProperty('--w',p.w[i]+'%');
-  });
-  renderAugs(p);
-}));
-renderAugs(P[4]);
+const D = {"meta":{"gameId":9050524432,"length":1144,"mode":"KIWI","totalKills":120,"win":true},"teams":{"mine":{"n":5,"k":53,"d":67,"a":122,"dmg":156183,"taken":237988,"mit":309190,"heal":48244,"healMate":2050,"shield":1743,"cc":169,"gold":92485,"win":true,"tower":4,"inhib":1},"foe":{"n":5,"k":67,"d":53,"a":154,"dmg":216907,"taken":162152,"mit":123494,"heal":43189,"healMate":183,"shield":0,"cc":112,"gold":90390,"win":false,"tower":1,"inhib":0}},"players":{"纳祖芒荣耀":{"name":"你好粗鲁先生","champ":"纳祖芒荣耀","cid":897,"puuid":"7348bd81-78ca-5656-b1bd-a4733304565e","side":"mine","win":true,"k":8,"d":12,"a":26,"dmg":28948,"taken":55643,"mit":143195,"heal":16230,"healMate":0,"shield":1743,"cc":48,"gold":17381,"spent":15350,"cs":64,"dead":309,"life":119,"multi":{"dbl":1,"tri":0,"quad":0,"penta":0,"max":2},"tower":2,"objDmg":1813,"spell1":"闪现","spell2":"标记","aug":[{"id":1421,"name":"舞会女王","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/promqueen_small.png"},{"id":1020,"name":"黎明使者的坚决","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/dawnbringersresolve_small.png"},{"id":3049,"name":"装甲冲击","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/armoredimpact_small.png"},{"id":1333,"name":"逃跑计划","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/escapeplan_small.png"}],"items":[{"id":6665,"name":"千变者贾修","price":3200},{"id":3143,"name":"兰顿之兆","price":2700},{"id":3047,"name":"铁板靴","price":1200},{"id":3075,"name":"荆棘之甲","price":2450},{"id":6662,"name":"冰脉护手","price":2900},{"id":2504,"name":"败魔","price":2900},{"id":2052,"name":"魄罗佳肴","price":0}],"trig":1,"deathTimes":[119.9,207.7,244.5,306.0,381.7,440.3,528.1,640.6,725.1,789.4,898.1,1038.1],"dmgShare":18.5,"killShare":15.1,"takenShare":23.4,"healShare":36.0,"ccShare":28.4,"teamRaw":27.402075046295085,"riskRaw":48.400000000000006,"outAxis":66.5,"teamAxis":90.2,"riskAxis":41.5,"score":43.2},"时光守护者":{"name":"我来加油你去送","champ":"时光守护者","cid":26,"puuid":"ba90185e-6edb-5f1e-b440-10130bcdaf15","side":"mine","win":true,"k":2,"d":8,"a":41,"dmg":15113,"taken":59516,"mit":32053,"heal":14058,"healMate":2050,"shield":0,"cc":69,"gold":16719,"spent":15350,"cs":27,"dead":227,"life":246,"multi":{"dbl":0,"tri":0,"quad":0,"penta":0,"max":1},"tower":3,"objDmg":1229,"spell1":"闪现","spell2":"清晰术","aug":[{"id":1388,"name":"无限循环往复","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/infiniterecursion_small.png"},{"id":1098,"name":"急急小子","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/withhaste_small.png"},{"id":1238,"name":"质变：棱彩阶","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/transmuteprismatic_small.png"},{"id":2018,"name":"纯粹主义者 - 术师","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/puristcaster_small.png"}],"items":[{"id":3121,"name":"末日寒冬","price":2400},{"id":3110,"name":"冰霜之心","price":2500},{"id":3083,"name":"狂徒铠甲","price":3100},{"id":3040,"name":"炽天使之拥","price":2900},{"id":6657,"name":"时光之杖","price":2600},{"id":3070,"name":"女神之泪","price":400},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":0,"deathTimes":[136.2,396.2,451.5,524.9,656.2,780.9,905.6,1048.7],"dmgShare":9.7,"killShare":3.8,"takenShare":25.0,"healShare":28.1,"ccShare":40.8,"teamRaw":30.377174920192132,"riskRaw":17.6,"outAxis":34.7,"teamAxis":100.0,"riskAxis":15.1,"score":42.3},"蛮族之王":{"name":"mm酷520","champ":"蛮族之王","cid":23,"puuid":"3b11dc51-a29c-5723-8b8f-8f0d03665db2","side":"mine","win":true,"k":6,"d":16,"a":20,"dmg":35398,"taken":52972,"mit":90523,"heal":13322,"healMate":0,"shield":0,"cc":24,"gold":16793,"spent":16850,"cs":21,"dead":418,"life":121,"multi":{"dbl":1,"tri":0,"quad":0,"penta":0,"max":2},"tower":3,"objDmg":2316,"spell1":"闪现","spell2":"标记","aug":[{"id":1006,"name":"利刃华尔兹","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/bladewaltz_small.png"},{"id":3078,"name":"鼓声暴起 低音轰鸣","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/theboomandthebass_small.png"},{"id":1336,"name":"升级：无尽之刃","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/upgradeie_small.png"},{"id":1170,"name":"万用瞄准镜","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/scopedweapons_small.png"}],"items":[{"id":3006,"name":"狂战士胫甲","price":1100},{"id":2512,"name":"猎魔人弩箭","price":2650},{"id":3031,"name":"无尽之刃","price":3500},{"id":6333,"name":"死亡之舞","price":3300},{"id":3046,"name":"幻影之舞","price":2650},{"id":3082,"name":"守望者铠甲","price":1000},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":2,"deathTimes":[121.4,199.5,233.1,363.8,397.1,429.2,458.4,518.2,555.5,628.6,677.6,726.9,776.9,854.2,973.0,1052.7],"dmgShare":22.7,"killShare":11.3,"takenShare":22.3,"healShare":26.7,"ccShare":14.2,"teamRaw":20.719673439211974,"riskRaw":79.2,"outAxis":81.4,"teamAxis":68.2,"riskAxis":67.9,"score":32.9},"法外狂徒":{"name":"木娄主","champ":"法外狂徒","cid":104,"puuid":"6deea4bf-0c69-55f3-9aa9-ab98e4cdc45e","side":"mine","win":true,"k":21,"d":18,"a":15,"dmg":43509,"taken":37327,"mit":29636,"heal":1893,"healMate":0,"shield":0,"cc":16,"gold":21295,"spent":22600,"cs":65,"dead":456,"life":76,"multi":{"dbl":4,"tri":0,"quad":0,"penta":0,"max":2},"tower":1,"objDmg":1105,"spell1":"标记","spell2":"闪现","aug":[{"id":1048,"name":"珠光护手","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/jeweledgauntlet_small.png"},{"id":1322,"name":"罪恶快感","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/getexcited_small.png"},{"id":1063,"name":"狂徒豪气","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/outlawsgrit_small.png"},{"id":1073,"name":"暗影疾奔","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/shadowrunner_small.png"}],"items":[{"id":6676,"name":"收集者","price":3000},{"id":3033,"name":"凡性的提醒","price":3000},{"id":3031,"name":"无尽之刃","price":3500},{"id":6696,"name":"公理圆弧","price":2750},{"id":6699,"name":"电震涡流剑","price":3000},{"id":3095,"name":"岚切","price":3200},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":0,"deathTimes":[39.1,63.0,150.8,192.8,226.5,304.9,337.2,376.9,442.9,520.0,589.0,673.0,754.7,811.2,882.4,956.2,1046.6,1099.8],"dmgShare":27.9,"killShare":39.6,"takenShare":15.7,"healShare":3.8,"ccShare":9.5,"teamRaw":11.439835737428943,"riskRaw":39.6,"outAxis":100.0,"teamAxis":37.7,"riskAxis":34.0,"score":42.5},"暴走萝莉":{"name":"欲弹琴弄断弦","champ":"暴走萝莉","cid":222,"puuid":"6d3ddbc1-171f-5f72-a61b-ed2e0b1e471b","side":"mine","win":true,"k":16,"d":13,"a":20,"dmg":33215,"taken":32530,"mit":13783,"heal":2741,"healMate":0,"shield":0,"cc":12,"gold":20297,"spent":18300,"cs":67,"dead":351,"life":162,"multi":{"dbl":3,"tri":0,"quad":0,"penta":0,"max":2},"tower":4,"objDmg":8139,"spell1":"闪现","spell2":"标记","aug":[{"id":2010,"name":"双发快射","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/doubletap_small.png"},{"id":1328,"name":"暴击律动","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/criticalrhythm_small.png"},{"id":3116,"name":"将他们放倒倒倒","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/takeemdowndowndown_small.png"},{"id":1022,"name":"灵巧","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/deft_small.png"}],"items":[{"id":3046,"name":"幻影之舞","price":2650},{"id":2523,"name":"海克斯镜片 C44","price":2800},{"id":6672,"name":"海妖杀手","price":3000},{"id":3031,"name":"无尽之刃","price":3500},{"id":3033,"name":"凡性的提醒","price":3000},{"id":3006,"name":"狂战士胫甲","price":1100},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":4,"deathTimes":[162.5,222.2,300.5,389.6,433.9,465.9,527.9,572.0,654.3,772.6,857.3,948.6,1046.7],"dmgShare":21.3,"killShare":30.2,"takenShare":13.7,"healShare":5.5,"ccShare":7.1,"teamRaw":10.061240856871871,"riskRaw":116.6,"outAxis":76.3,"teamAxis":33.1,"riskAxis":100.0,"score":8.0},"探险家":{"name":"百无一用是生情","champ":"探险家","cid":81,"puuid":"95e08adb-9bd8-5bee-8325-9cd3cd773232","side":"foe","win":false,"k":16,"d":8,"a":29,"dmg":51940,"taken":18345,"mit":7527,"heal":3072,"healMate":183,"shield":0,"cc":0,"gold":18006,"spent":17600,"cs":46,"dead":211,"life":201,"multi":{"dbl":3,"tri":2,"quad":0,"penta":0,"max":3},"tower":1,"objDmg":2238,"spell1":"标记","spell2":"闪现","aug":[{"id":2087,"name":"大法师","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/archmage_small.png"},{"id":2103,"name":"狙神飞星","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/questbangbang_small.png"},{"id":1238,"name":"质变：棱彩阶","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/transmuteprismatic_small.png"},{"id":3052,"name":"远射天资","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/bonk_small.png"}],"items":[{"id":3137,"name":"蜕生","price":3000},{"id":3118,"name":"残疫","price":2700},{"id":4628,"name":"视界专注","price":2700},{"id":4645,"name":"影焰","price":3200},{"id":3089,"name":"灭世者的死亡之帽","price":3500},{"id":3802,"name":"遗失的章节","price":1200},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":0,"deathTimes":[66.5,144.1,258.3,391.8,583.0,814.9,878.5,1094.5],"dmgShare":23.9,"killShare":23.9,"takenShare":11.3,"healShare":7.1,"ccShare":0.0,"teamRaw":7.079313942756229,"riskRaw":17.6,"outAxis":100.0,"teamAxis":23.6,"riskAxis":25.0,"score":41.0},"不破之誓":{"name":"公主早安","champ":"不破之誓","cid":804,"puuid":"963d471f-98a2-5d3a-8023-502118de5685","side":"foe","win":false,"k":5,"d":12,"a":39,"dmg":27845,"taken":39598,"mit":25018,"heal":11880,"healMate":0,"shield":0,"cc":9,"gold":16633,"spent":16250,"cs":64,"dead":353,"life":145,"multi":{"dbl":0,"tri":0,"quad":0,"penta":0,"max":1},"tower":1,"objDmg":2015,"spell1":"闪现","spell2":"幽灵疾步","aug":[{"id":2010,"name":"双发快射","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/doubletap_small.png"},{"id":1077,"name":"灵魂虹吸","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/soulsiphon_small.png"},{"id":1322,"name":"罪恶快感","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/getexcited_small.png"},{"id":1060,"name":"海洋龙魂","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/oceansoul_small.png"}],"items":[{"id":6676,"name":"收集者","price":3000},{"id":3085,"name":"卢安娜的飓风","price":2650},{"id":3153,"name":"破败王者之刃","price":3200},{"id":3036,"name":"多米尼克领主的致意","price":3300},{"id":6695,"name":"巨蛇之牙","price":2500},{"id":3008,"name":"暴食胫甲","price":1100},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":2,"deathTimes":[145.5,261.3,355.3,460.9,558.7,637.7,732.3,784.9,859.2,911.9,962.8,1090.4],"dmgShare":12.8,"killShare":7.5,"takenShare":24.4,"healShare":27.5,"ccShare":8.0,"teamRaw":20.12226360800694,"riskRaw":70.4,"outAxis":53.6,"teamAxis":67.2,"riskAxis":100.0,"score":9.7},"残月之肃":{"name":"原神高手","champ":"残月之肃","cid":523,"puuid":"ab917363-8f8f-5a41-849d-04a856c9d485","side":"foe","win":false,"k":17,"d":11,"a":28,"dmg":45736,"taken":32295,"mit":24543,"heal":7480,"healMate":0,"shield":0,"cc":32,"gold":19159,"spent":18500,"cs":66,"dead":283,"life":159,"multi":{"dbl":4,"tri":0,"quad":0,"penta":0,"max":2},"tower":0,"objDmg":120,"spell1":"闪现","spell2":"幽灵疾步","aug":[{"id":1225,"name":"双刀流","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/dualwield_small.png"},{"id":1336,"name":"升级：无尽之刃","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/upgradeie_small.png"},{"id":1077,"name":"灵魂虹吸","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/soulsiphon_small.png"},{"id":1170,"name":"万用瞄准镜","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/scopedweapons_small.png"}],"items":[{"id":3143,"name":"兰顿之兆","price":2700},{"id":3036,"name":"多米尼克领主的致意","price":3300},{"id":3139,"name":"水银弯刀","price":3200},{"id":3031,"name":"无尽之刃","price":3500},{"id":3085,"name":"卢安娜的飓风","price":2650},{"id":6676,"name":"收集者","price":3000},{"id":220013,"name":"魄罗佳肴","price":0}],"trig":0,"deathTimes":[159.8,217.8,319.3,438.3,568.8,658.1,773.6,874.5,928.1,1050.8,1109.7],"dmgShare":21.1,"killShare":25.4,"takenShare":19.9,"healShare":17.3,"ccShare":28.6,"teamRaw":21.993522582224745,"riskRaw":24.200000000000003,"outAxis":88.1,"teamAxis":73.5,"riskAxis":34.4,"score":49.2},"恶魔小丑":{"name":"何金银","champ":"恶魔小丑","cid":35,"puuid":"b501c7b2-7e9e-5489-a774-7c1dbe03cce5","side":"foe","win":false,"k":13,"d":7,"a":38,"dmg":42538,"taken":33253,"mit":31110,"heal":14741,"healMate":0,"shield":0,"cc":48,"gold":18620,"spent":15750,"cs":45,"dead":204,"life":298,"multi":{"dbl":0,"tri":0,"quad":0,"penta":0,"max":1},"tower":1,"objDmg":653,"spell1":"闪现","spell2":"标记","aug":[{"id":1156,"name":"沃格勒特的巫师帽","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/quest_woogletswitchcap_small.png"},{"id":1390,"name":"超凡邪恶","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/aram_phenomenalevil_small.png"},{"id":2132,"name":"术士果汁盒","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/warlockjuicebox_small.png"},{"id":3055,"name":"终极循环往复","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/zealot_small.png"}],"items":[{"id":2503,"name":"黯炎火炬","price":2800},{"id":228002,"name":"沃格勒特的巫师帽","price":6000},{"id":3118,"name":"残疫","price":2700},{"id":3158,"name":"明朗之靴","price":900},{"id":6653,"name":"兰德里的折磨","price":3000},{"id":3916,"name":"湮灭宝珠","price":800}],"trig":1,"deathTimes":[141.0,296.7,370.0,584.1,910.8,968.6,1044.2],"dmgShare":19.6,"killShare":19.4,"takenShare":20.5,"healShare":34.1,"ccShare":42.9,"teamRaw":29.93706896156422,"riskRaw":37.400000000000006,"outAxis":81.9,"teamAxis":100.0,"riskAxis":53.1,"score":48.8},"虚空掠夺者":{"name":"天意不可违","champ":"虚空掠夺者","cid":121,"puuid":"b6eabd57-17a5-5a94-a988-334c7ad3e9d8","side":"foe","win":false,"k":16,"d":15,"a":20,"dmg":48848,"taken":38661,"mit":35296,"heal":6016,"healMate":0,"shield":0,"cc":23,"gold":17972,"spent":17950,"cs":32,"dead":422,"life":75,"multi":{"dbl":3,"tri":1,"quad":0,"penta":0,"max":3},"tower":0,"objDmg":215,"spell1":"闪现","spell2":"标记","aug":[{"id":1004,"name":"回归基本功","level":"kPrismatic","icon":"https://game.gtimg.cn/images/lol/act/img/rune/backtobasics_small.png"},{"id":2116,"name":"威能之追求","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/marksmage_small.png"},{"id":1326,"name":"夜狩","level":"kGold","icon":"https://game.gtimg.cn/images/lol/act/img/rune/nightstalking_small.png"},{"id":1034,"name":"防护面纱","level":"kSilver","icon":"https://game.gtimg.cn/images/lol/act/img/rune/poltergeist_small.png"}],"items":[{"id":126697,"name":"狂妄","price":2950},{"id":6676,"name":"收集者","price":3000},{"id":6699,"name":"电震涡流剑","price":3000},{"id":6694,"name":"赛瑞尔达的怨恨","price":3000},{"id":2517,"name":"无穷饥渴","price":3100},{"id":6695,"name":"巨蛇之牙","price":2500}],"trig":1,"deathTimes":[69.1,152.0,238.3,330.7,383.3,478.8,565.1,634.8,729.3,800.6,853.9,905.6,952.5,1026.1,1097.3],"dmgShare":22.5,"killShare":23.9,"takenShare":23.8,"healShare":13.9,"ccShare":20.5,"teamRaw":20.867830905447875,"riskRaw":55.0,"outAxis":94.0,"teamAxis":69.7,"riskAxis":78.1,"score":35.1}},"episodes":[{"t":141.0,"by":"恶魔小丑","side":"foe","ours":3,"theirs":1,"deaths":["恶魔小丑","探险家"]},{"t":222.2,"by":"暴走萝莉","side":"mine","ours":2,"theirs":0,"deaths":["暴走萝莉"]},{"t":300.5,"by":"暴走萝莉","side":"mine","ours":2,"theirs":0,"deaths":["暴走萝莉"]},{"t":389.6,"by":"暴走萝莉","side":"mine","ours":2,"theirs":1,"deaths":["暴走萝莉"]},{"t":429.2,"by":"蛮族之王","side":"mine","ours":2,"theirs":1,"deaths":["蛮族之王","暴走萝莉","纳祖芒荣耀"]},{"t":518.2,"by":"蛮族之王","side":"mine","ours":4,"theirs":0,"deaths":["蛮族之王","法外狂徒","时光守护者"]},{"t":558.7,"by":"不破之誓","side":"foe","ours":2,"theirs":0,"deaths":["不破之誓"]},{"t":772.6,"by":"暴走萝莉","side":"mine","ours":2,"theirs":1,"deaths":["暴走萝莉"]},{"t":905.6,"by":"虚空掠夺者","side":"foe","ours":2,"theirs":0,"deaths":["虚空掠夺者"]},{"t":1038.1,"by":"纳祖芒荣耀","side":"mine","ours":3,"theirs":1,"deaths":["纳祖芒荣耀","法外狂徒","暴走萝莉"]},{"t":1090.4,"by":"不破之誓","side":"foe","ours":2,"theirs":1,"deaths":["不破之誓"]}],"objectives":[[397.1,"Ace","ORDER"],[462.9,"TurretKilled","Turret_TChaos_L1_P3_671196429_0"],[528.1,"Ace","ORDER"],[584.1,"Ace","CHAOS"],[932.3,"TurretKilled","Turret_TOrder_L1_P3_2250400266_0"],[1039.4,"TurretKilled","Turret_TOrder_L1_P2_2032291219_0"],[1052.7,"Ace","ORDER"],[1123.9,"InhibKilled","Inhib_TOrder_L1_P1_196971597_0"],[1131.3,"TurretKilled","Turret_TOrder_L1_P5_1477396591_0"],[1136.9,"TurretKilled","Turret_TOrder_L1_P4_2267177885_0"]],"career":{"games":1,"worm":{"6d3ddbc1-171f-5f72-a61b-ed2e0b1e471b":1,"963d471f-98a2-5d3a-8023-502118de5685":1},"source":["2026-10-26T19-26-49"]}};
 
-/* 美颜模式：把难看的数字换个说法，纯整蛊 */
-const kdNodes=[...document.querySelectorAll('.kd')];
-const kdRaw=kdNodes.map(el=>{
-  const n=el.textContent.match(/\d+/g).map(Number);
-  return {k:n[0],d:n[1],a:n[2]};
-});
-const beauty=document.getElementById('beauty');
-beauty.addEventListener('click',()=>{
-  const on=beauty.classList.toggle('on');
-  kdNodes.forEach((el,i)=>{
-    const {k,d,a}=kdRaw[i];
-    el.innerHTML=on
-      ? `参团 ${k+a} · 钢铁意志 ×${d}`
-      : `${k} <span class="d">/</span> ${d} <span class="d">/</span> ${a}`;
+const $ = id => document.getElementById(id);
+const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); };
+const kk = n => n >= 1000 ? (n/1000).toFixed(1) + 'k' : String(n);
+const champImg = cid => 'https://cdn.communitydragon.org/latest/champion/' + cid + '/square';
+const itemImg = id => 'https://ddragon.leagueoflegends.com/cdn/16.21.1/img/item/' + id + '.png';
+
+const P = D.players, META = D.meta, TM = D.teams.mine, TF = D.teams.foe;
+const sideCN = s => s === 'mine' ? '我方' : '敌方';
+const rank = side => Object.keys(P).filter(c => P[c].side === side).sort((a,b) => P[b].score - P[a].score);
+const GOLD_RANK = {}; // 金币获得的全场名次，详情条用
+Object.keys(P).sort((a,b) => P[b].gold - P[a].gold).forEach((c, i) => { GOLD_RANK[c] = i + 1; });
+
+/* 三栏评价：敌我各算一套，绝不跨队混排 */
+const VERDICT = {};
+function pickVerdict(side){
+  const g = Object.keys(P).filter(c => P[c].side === side);
+  const carry = g.slice().sort((a,b) => P[b].score - P[a].score)[0];
+  const worm  = g.slice().sort((a,b) =>
+    (P[b].riskAxis - P[a].riskAxis) || (P[b].trig - P[a].trig) || (P[b].d - P[a].d))[0];
+  // 不团队：输出不低、团队贡献最低，且不与前两项重复
+  const rest = g.filter(c => c !== carry && c !== worm);
+  const selfish = rest.filter(c => P[c].outAxis >= 60)
+      .sort((a,b) => P[a].teamAxis - P[b].teamAxis)[0]
+    || rest.sort((a,b) => P[a].teamAxis - P[b].teamAxis)[0];
+  return { carry, worm, selfish };
+}
+VERDICT.mine = pickVerdict('mine');
+VERDICT.foe  = pickVerdict('foe');
+
+/* ── 头部 ── */
+$('mid').textContent = fmt(META.length) + ' · 海克斯大乱斗 · ' + META.mode;
+$('result').textContent = META.win ? '胜利' : '失败';
+$('result').className = 'result' + (META.win ? '' : ' lose');
+$('res').textContent = META.win ? '我方胜利' : '我方失败';
+$('sub').innerHTML = '<b>' + TM.k + '</b> : <b>' + TF.k + '</b> 击杀 · 全场 <b>'
+  + META.totalKills + '</b> 次阵亡 · 时长 <b>' + fmt(META.length) + '</b>';
+
+const goldDiff = TM.gold - TF.gold;
+$('kpis').innerHTML = [
+  [TM.k + '/' + TM.d + '/' + TM.a, '全队 K / D / A', ''],
+  [(goldDiff >= 0 ? '+' : '−') + (Math.abs(goldDiff)/1000).toFixed(1) + '<span class="s">k</span>',
+   '金币差', goldDiff >= 0 ? 'pos' : 'neg'],
+  [TM.tower + '<span class="s">:</span>' + TF.tower, '防御塔', ''],
+].map(([v, l, cls]) =>
+  '<div class="kpi"><div class="v ' + cls + '">' + v + '</div><div class="l">' + l + '</div></div>'
+).join('');
+
+$('foe-line').textContent = TF.tower + ' TOWER · ' + TF.k + ' KILL';
+$('mine-line').textContent = TM.tower + ' TOWER · ' + TM.k + ' KILL';
+
+
+/* ── 阵容 ── */
+function slotHTML(cn, i){
+  const p = P[cn];
+  const stamp = VERDICT[p.side].worm === cn;
+  const mvp = VERDICT[p.side].carry === cn;
+  return '<div class="slot" data-c="' + cn + '">'
+    + '<div class="top"><span class="idx">' + String(i+1).padStart(2,'0') + '</span>'
+      + '<span class="sc' + (p.score < 0 ? ' na' : '') + (mvp ? ' mvp' : '')
+      + '">' + p.score.toFixed(0) + '</span></div>'
+    + '<div class="avawrap"><div class="ava"><img src="' + champImg(p.cid) + '" alt=""></div>'
+      + (stamp ? '<span class="stamp">蛆</span>' : '') + '</div>'
+    + '<div class="nm">' + p.name + '</div>'
+    + '<div class="kd">' + p.k + ' / <span class="d' + (p.d >= 12 ? ' hot' : '') + '">'
+      + p.d + '</span> / ' + p.a + '</div>'
+    + '<div class="rails">'
+    +   '<i style="--w:' + p.outAxis + '%;--c:var(--rail)"></i>'
+    +   '<i style="--w:' + p.teamAxis + '%;--c:var(--rail-2)"></i>'
+    +   '<i style="--w:' + p.riskAxis + '%;--c:var(--danger)"></i>'
+    + '</div></div>';
+}
+$('foe-slots').innerHTML = rank('foe').map(slotHTML).join('');
+$('mine-slots').innerHTML = rank('mine').map(slotHTML).join('');
+
+/* ── 时间轴：崩盘刻痕 + 目标 ── */
+(function(){
+  const ax = $('axis'), L = META.length;
+  for (let m = 1; m * 60 < L; m++){
+    const d = document.createElement('div');
+    d.className = 'tick'; d.style.left = (m*60/L*100) + '%';
+    ax.appendChild(d);
+  }
+  D.episodes.forEach(e => {
+    const p = P[e.by];
+    const d = document.createElement('div');
+    d.className = 'ep ' + e.side;
+    d.style.left = (e.t/L*100) + '%';
+    d.innerHTML = '<span class="lb">' + e.ours + '</span>';
+    d.title = fmt(e.t) + ' · ' + p.name + '（' + p.champ + '）先倒，之后'
+      + sideCN(e.side) + '再死 ' + e.ours + ' 人，对方死 ' + e.theirs + ' 人';
+    ax.appendChild(d);
   });
-  const kLabel=document.querySelector('.vd.bad .k');
-  if(kLabel) kLabel.textContent=on?'灵 魂 人 物':'在 犯 罪';
-  const tag=document.getElementById('i-tag');
-  if(tag) tag.textContent=on?'钢铁意志 ×11 · 评分 28':'阵亡 11 · 评分 28';
-  document.querySelector('.indict .hd h3').textContent=on?'功 劳 簿':'罪 状';
-  document.querySelector('.indict .hd .who').textContent=on?'Yasuo · 共 4 次挺身而出':'Yasuo · 共 4 条可查证';
+  D.objectives.forEach(([t, name, who]) => {
+    const d = document.createElement('div');
+    d.className = 'ob' + (name === 'InhibKilled' ? ' inhib' : name === 'Ace' ? ' ace' : '');
+    d.style.left = (t/L*100) + '%';
+    d.title = fmt(t) + ' · ' + (name === 'TurretKilled' ? '塔被推'
+      : name === 'InhibKilled' ? '水晶被破' : '团灭') + ' · ' + who;
+    ax.appendChild(d);
+  });
+})();
+
+/* ── 结论：敌我各一组，同一套判定口径 ── */
+let pretty = false;
+function renderVerdicts(){
+  const TT = pretty ? ['全场最累', '灵魂人物', '独狼艺术家'] : ['尽力 C', '蛆', '不团队'];
+  $('verdicts').innerHTML = '<div class="vhead"><span>本局评价</span>'
+    + '<i>敌我各一组 · 只针对这一局，不含历史战绩</i></div>'
+    + ['mine', 'foe'].map(side => {
+    const v = VERDICT[side], agg = side === 'mine' ? TM : TF;
+    const c = P[v.carry], w = P[v.worm], f = P[v.selfish];
+    const wEp = D.episodes.filter(e => e.by === v.worm).length;
+    const allEp = D.episodes.filter(e => e.side === side).length;
+
+    // 跨局只统计一件事：这个人在已记录的局里当了几次本队蛆
+    const CAREER = D.career || null;
+    const timesAsWorm = CAREER ? (CAREER.worm[w.puuid] || 1) : 0;
+    const wormNote = CAREER
+      ? '<i>' + (CAREER.games <= 1 ? '首次' : '第 ' + timesAsWorm + ' 次') + '</i>'
+      : '';
+
+    const cards = [
+      { t: TT[0], p: c, cls: '',
+        why: '综合分 <b>' + c.score.toFixed(0) + '</b> 队内第一（输出轨 <b>' + c.outAxis
+           + '</b> · 团队轨 <b>' + c.teamAxis + '</b>）。<br>'
+           + (c.teamAxis >= c.outAxis
+               ? '自我减伤 <b>' + c.mit.toLocaleString() + '</b>、治疗+护盾 <b>'
+                 + kk(c.heal + c.shield) + '</b>、承伤 <b>' + c.takenShare + '%</b>。'
+               : '伤害 <b>' + c.dmg.toLocaleString() + '</b>、<b>' + c.k + '</b> 杀占队内 <b>'
+                 + c.killShare + '%</b>。') },
+      { t: TT[1] + wormNote, p: w, cls: ' worm',
+        why: '风险轨 <b>100</b>：本队 <b>' + allEp + '</b> 次崩盘里 <b>' + wEp
+           + '</b> 次由他先倒。<br><b>' + w.d + '</b> 死、承伤 <b>' + w.takenShare
+           + '%</b>、控制 <b>' + w.cc + '</b> 秒。' },
+      { t: TT[2], p: f, cls: '',
+        why: '伤害 <b>' + f.dmg.toLocaleString() + '</b>（输出轨 <b>' + f.outAxis
+           + '</b>），团队轨只有 <b>' + f.teamAxis + '</b>。<br>承伤 <b>' + kk(f.taken)
+           + '</b>、控制 <b>' + f.cc + '</b> 秒、治疗 <b>' + kk(f.heal) + '</b>。' },
+    ];
+
+    return '<div class="vgroup">'
+      + '<div class="vlabel"><span class="side">' + sideCN(side) + '</span><span class="ln"></span>'
+      + '<span class="sum">' + agg.k + ' 杀 · ' + agg.dmg.toLocaleString() + ' 伤害 · '
+      + agg.taken.toLocaleString() + ' 承伤 · 塔 ' + agg.tower + '</span></div>'
+      + '<div class="vgrid">'
+      + cards.map(x => '<div class="vd' + x.cls + '"><div class="t">' + x.t + '</div>'
+          + '<div class="n">' + x.p.name + '<em>' + x.p.champ + '</em></div>'
+          + '<div class="why">' + x.why + '</div></div>').join('')
+      + '</div></div>';
+  }).join('');
+}
+renderVerdicts();
+
+
+/* ── 崩盘记录 ── */
+(function(){
+  const eps = D.episodes.slice().sort((a,b) => a.t - b.t);
+  $('ep-count').textContent = eps.length;
+
+  $('ilist').innerHTML = eps.map(e => {
+    const p = P[e.by];
+    const hot = e.by === VERDICT.mine.worm;
+    return '<div class="ir' + (hot ? ' crime' : '') + '">'
+      + '<span class="tm">' + fmt(e.t) + '</span>'
+      + '<span class="who"><b>' + p.name + '</b><span>' + p.champ + '</span>'
+      + '<span class="sd">' + sideCN(e.side) + '</span></span>'
+      + '<span class="cost">再死 ' + e.ours + ' · 对方 ' + e.theirs + '</span></div>';
+  }).join('');
+
+  const dist = $('dist'), L = META.length;
+  const mx = Math.max.apply(null, eps.map(e => Math.max(e.ours, e.theirs)));
+  eps.forEach(e => {
+    const d = document.createElement('div');
+    d.className = 'm' + (e.side === 'foe' ? ' foe' : '');
+    d.style.left = (e.t/L*100) + '%';
+    const h = Math.round(e.ours / mx * 88) + 'px';
+    d.style.setProperty('--h', h);
+    if (e.side === 'foe'){ d.style.height = h; d.style.top = '113px'; d.style.bottom = 'auto'; }
+    d.title = fmt(e.t) + ' · ' + P[e.by].name + '（' + sideCN(e.side) + '）先倒 · 再死 ' + e.ours;
+    dist.appendChild(d);
+  });
+  $('dist-ax').innerHTML = [0, Math.round(L/120), Math.round(L/60)]
+    .map(m => '<span>' + m + 'm</span>').join('');
+})();
+
+/* ── 详情条 ── */
+/* 柱长一律按「本队最高」归一，与旁边的「队内」百分比同一参照系 */
+function teamMax(side){
+  const g = Object.values(P).filter(p => p.side === side);
+  const mx = f => Math.max.apply(null, g.map(f)) || 1;
+  return { dmg: mx(p => p.dmg), taken: mx(p => p.taken), mit: mx(p => p.mit),
+           heal: mx(p => p.heal + p.shield), cc: mx(p => p.cc), gold: mx(p => p.gold) };
+}
+const LV = { kPrismatic: 'p', kGold: 'g', kSilver: 's', kBronze: 's', kEventChoice: 's' };
+
+function renderDetail(cn){
+  const p = P[cn];
+  $('d-img').src = champImg(p.cid);
+  $('d-name').textContent = p.name;
+  $('d-champ').textContent = p.champ + ' · ' + sideCN(p.side);
+  $('d-kda').textContent = p.k + ' / ' + p.d + ' / ' + p.a;
+  $('d-extra').textContent = '综合 ' + p.score.toFixed(0) + ' · 阵亡累计 ' + p.dead + 's';
+
+  const MX = teamMax(p.side);
+  const rows = [
+    ['伤害', p.dmg, MX.dmg, 'var(--rail)', p.dmgShare + '% 队内'],
+    ['承伤', p.taken, MX.taken, 'var(--rail-2)', p.takenShare + '% 队内'],
+    ['自我减伤', p.mit, MX.mit, 'var(--rail-2)', '每次阵亡 ' + Math.round(p.mit / Math.max(1, p.d))],
+    ['治疗+护盾', p.heal + p.shield, MX.heal, 'var(--rail-2)', p.healShare + '% 队内'],
+    ['控制', p.cc, MX.cc, 'var(--rail)', '秒 · ' + p.ccShare + '% 队内'],
+    ['金币 获得', p.gold, MX.gold, 'var(--gold)', '全场第 ' + GOLD_RANK[cn]],
+  ];
+  $('d-stats').innerHTML = rows.map(([label, v, mx, color, note]) =>
+    '<div class="st"><div class="top"><span class="k">' + label + '</span>'
+    + '<span class="v">' + v.toLocaleString() + (note ? '<small>' + note + '</small>' : '') + '</span></div>'
+    + '<div class="bar"><i style="--w:' + Math.round(v/mx*100) + '%;--c:' + color + '"></i></div></div>'
+  ).join('');
+
+  $('d-augs').innerHTML = p.aug.map(a => {
+    if (!a) return '<div class="aug s"><span>未记录</span></div>';
+    return '<div class="aug ' + (LV[a.level] || 's') + '">'
+      + (a.icon ? '<img src="' + a.icon + '" alt="">' : '') + '<span>' + a.name + '</span></div>';
+  }).join('');
+
+  $('d-gold').textContent = '花费 ' + kk(p.spent) + ' 金币';
+  const pad = p.items.slice(0, 7);
+  while (pad.length < 7) pad.push(null);
+  $('d-items').innerHTML = pad.map(it => it
+    ? '<img src="' + itemImg(it.id) + '" alt="" title="' + it.name + ' · ' + it.price + 'g">'
+    : '<div class="emp"></div>').join('');
+
+  $('d-spells').innerHTML = '<div><b>D</b>' + (p.spell1 || '—') + '</div>'
+    + '<div><b>F</b>' + (p.spell2 || '—') + '</div>';
+}
+
+/* ── 交互 ── */
+document.querySelectorAll('.slot').forEach(s => {
+  s.addEventListener('click', () => {
+    document.querySelectorAll('.slot').forEach(x => x.classList.remove('sel'));
+    s.classList.add('sel');
+    renderDetail(s.dataset.c);
+  });
 });
+
+$('pretty').addEventListener('click', () => {
+  pretty = !pretty;
+  $('pretty').classList.toggle('on', pretty);
+  $('indict-title').textContent = pretty ? '高光时刻' : '崩盘记录';
+  renderVerdicts();
+});
+
+$('foot-l').textContent = 'gameId ' + META.gameId + ' · ' + META.mode + ' · queueId 2400';
+const REC = D.career ? D.career.games : 0;
+$('foot-r').innerHTML = '评价口径 <b>仅本局</b>'
+  + (REC ? ' · 已记录 <b>' + REC + '</b> 局' : '')
+  + ' · 数据源 <b>eog-stats-block</b> + <b>liveclientdata</b>';
+
+/* 默认选中「尽力 C」那一位，让详情条和第一栏结论对得上 */
+const first = VERDICT.mine.carry;
+renderDetail(first);
+document.querySelectorAll('.slot').forEach(s => {
+  if (s.dataset.c === first && s.parentElement.id === 'mine-slots') s.classList.add('sel');
+});
+</script>
+<script>
+/* 原型外壳桥：只在被 iframe 嵌入时生效，单开这三个页面不受影响 */
+(function () {
+  if (window.parent === window) return;
+  var send = function (msg) { msg.__proto = 1; parent.postMessage(msg, '*'); };
+  var push = function () { send({ height: document.documentElement.scrollHeight }); };
+  send({ height: document.documentElement.scrollHeight });
+  window.addEventListener('load', push);
+  if (window.ResizeObserver) new ResizeObserver(push).observe(document.body);
+})();
 </script>
 </body>
 </html>

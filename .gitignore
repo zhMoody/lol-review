@@ -25,6 +25,9 @@ node_modules/
 # Project assistant notes (not source)
 .workbuddy/
 
+# 原始抓包（本地分析用，不入库；fixtures/gtimg、qq101、tencent-hn10 等整理后的快照仍保留）
+fixtures/capture/
+
 # Build
 dist/
 build/

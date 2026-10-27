@@ -19,6 +19,8 @@
 | [`08-fun-features.md`](./08-fun-features.md) | 彩蛋与整蛊（只列能实现的） |
 | [`09-feature-gaps.md`](./09-feature-gaps.md) | 竞品对比与小功能清单 |
 | [`10-app-tech.md`](./10-app-tech.md) | **App 端工程实现**：技术栈 / 目录 / IPC / 存储 / 评分引擎接口 / 测试 / 开工顺序 |
+| [`11-data-findings.md`](./11-data-findings.md) | **真实对局数据分析**：实时 vs 赛后能力矩阵、模型阈值验证、统计局限 |
+| [`12-data-dictionary.md`](./12-data-dictionary.md) | **数据字典**：8 类数据源的逐字段清单、189 个统计字段分类、18 条字段陷阱 |
 
 **设计稿**：`design/offline.html` · `home.html` · `teammates.html` · `ingame.html` · `limited.html` · `building.html` · `report.html`
 
@@ -61,13 +63,17 @@
 
 ---
 
-## 三条硬事实（实测）
+## 硬事实（实测）
 
 1. **国服 LCU 与 SGP 都通**，队友战绩可查（`/lol-match-history/v1/products/lol/{puuid}/matches`）。
 2. **海克斯大乱斗 = queueId 2400 / gameMode `KIWI` / mapId 12**。
 3. **`game-timelines` 给到每次击杀的 victimId / timestamp / position**，白给阵亡可精确到秒，不用猜。
+4. **实时 `liveclientdata/eventdata` 有 `ChampionKill` / `Ace` / `Multikill` / `TurretKilled`**，带 `EventTime`——对局中就能做死亡归因，但**不含坐标**（位置图只能赛后画）。
+5. **实时没有血量、没有金币、没有符文**（`runes: null`、`wardScore` 恒 0）；伤害/承伤/治疗/控制只在赛后。
+6. **`eog-stats-block` 是赛后主数据源** —— 10 人完整数据（伤害/承伤/治疗/控制/金币/**符文**）在 `teams[].players[].stats`，不在 `participants`（后者恒为空）。**报告不必依赖 match-history**，只有死亡位置图需要时间线。
+7. **装备 `price` 是合成价**，必须用 `items.json` 的 `priceTotal`（差 3–15 倍）；金币直接用 eog 的 `goldEarned`。
 
-详见 07 文档。
+详见 07（数据目录）与 11（真实对局分析）。
 
 ---
 
@@ -95,3 +101,23 @@ fixtures/                                         真实快照（国服对局 + 
 **待验**：`npm run verify:lcu` 需 Windows + 腾讯客户端，这是唯一的技术不确定点。
 
 剩余设计缺口（不阻塞开发）：悬浮条 420×168、游戏内叠加层、设置页——06 文档已有规格，可边做边出稿。
+
+---
+
+## 分析结论待回写（11 文档）
+
+真实对局数据推翻了 07 文档里几个假设，**尚未回写**：
+
+| 项 | 现状 | 应为 |
+|---|---|---|
+| 死亡窗口 | 8 秒 | **12 秒**（5–8 秒排名与稳定版仅 ρ=0.42，接近随机） |
+| 犯罪判定 | 阵亡次数 | **崩盘率**（死后 12s 本队又死 ≥2 且无对等交换） |
+| 前排/后排 | 未区分 | **「首倒」必须按英雄类型加权**，否则冤枉坦克 |
+| 伤害权重 | CARRY 主指标 | **降权**。实测输方伤害高 39%、击杀多 14 个，仍然输了 |
+| 控制 / 承伤 | 辅助项 | **升权**。赢方控制多 51%、承伤多 47% |
+| 符文 | 待验证 | **确定能做**（赛后 eog 直出）；**实时永远没有**，不要设计局内展示 |
+| 报告数据源 | match-history | **优先 eog-stats-block**，时间线只用来补死亡坐标 |
+
+以及一条**已被推翻**的旧约束：早期结论是「单局崩盘率分辨不出人，需 ≥3 局才敢给标签」。
+统计事实成立，但产品决定**接受单局波动**——标签就是本局的，不做多局平滑，
+只在页面上显式标注口径。详见 11 §7 规则 1–2。
